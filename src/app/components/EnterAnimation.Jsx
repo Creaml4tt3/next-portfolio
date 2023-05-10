@@ -1,4 +1,3 @@
-"use client";
 import { useEffect, useRef } from "react";
 import { motion, useInView, useAnimation } from "framer-motion";
 
@@ -14,7 +13,6 @@ export default function EnterAnimation({
   const mainControl = useAnimation();
 
   useEffect(() => {
-    console.log(isInView);
     if (isInView) {
       mainControl.start("visible");
     }
