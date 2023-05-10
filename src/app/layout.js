@@ -4,10 +4,10 @@ import { useState } from "react";
 
 import Nav from "./components/Nav";
 
-export const metadata = {
+/* export const metadata = {
   title: "Creaml4tt3 NextJS",
   description: "Made with Love serve me Luck",
-};
+}; */
 
 export default function RootLayout({ children }) {
   const [navActive, setNavActive] = useState("");
