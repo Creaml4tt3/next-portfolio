@@ -19,10 +19,6 @@ export default function EnterAnimation({
     }
   }, [isInView]);
 
-  console.log(before);
-  console.log(after);
-  console.log(transition);
-
   return (
     <motion.div
       ref={ref}
