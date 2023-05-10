@@ -2,7 +2,7 @@
 import { useEffect, useRef } from "react";
 import { motion, useInView, useAnimation } from "framer-motion";
 
-export default function EnterAnimation({
+export default function Reveal({
   children,
   before = { opacity: 0, y: 80 },
   after = { opacity: 1, y: 0 },
