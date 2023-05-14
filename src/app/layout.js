@@ -1,13 +1,11 @@
 "use client";
+import Head from "next/head";
+import dynamic from "next/dynamic";
+
 import "./globals.scss";
 import { useState } from "react";
 
-import Nav from "./components/Nav";
-
-/* export const metadata = {
-  title: "Creaml4tt3 NextJS",
-  description: "Made with Love serve me Luck",
-}; */
+const Nav = dynamic(() => import("./components/Nav"), { ssr: false });
 
 export default function RootLayout({ children }) {
   const [navActive, setNavActive] = useState("");
@@ -17,7 +15,7 @@ export default function RootLayout({ children }) {
 
   return (
     <html lang="en">
-      <body className="">
+      <body className="overflow-x-hidden">
         <Nav active={navActive} handleNav={handleNav} />
         {children}
       </body>

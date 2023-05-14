@@ -4,7 +4,7 @@ import { motion, useInView, useAnimation } from "framer-motion";
 
 export default function Reveal({
   children,
-  before = { opacity: 0, y: 80 },
+  before = { opacity: 0, y: -80 },
   after = { opacity: 1, y: 0 },
   transition = { duration: 0.5, delay: 0.25 },
   className = "",
@@ -29,7 +29,7 @@ export default function Reveal({
       initial="hidden"
       animate={mainControl}
       transition={transition}
-      className={`EnterComponent ${className}`}
+      className={`EnterComponent w-fit ${className}`}
     >
       {children}
     </motion.div>

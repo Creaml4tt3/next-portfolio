@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import Lottie from "lottie-react";
 
-import eyeLottie from "/public/lotties/eye.json";
+import eyeLottie from "@public/lotties/eye.json";
 
 export default function Nav({ active, handleNav }) {
   const [navToggle, setNavToggle] = useState(false);
@@ -13,12 +13,14 @@ export default function Nav({ active, handleNav }) {
   useEffect(() => {
     document.addEventListener("wheel", handleWheel);
     window.addEventListener("resize", handleResize);
-    if (navRef.current) {
-      setNavSize({
-        width: navRef.current.offsetWidth,
-        height: navRef.current.offsetHeight,
-      });
-    }
+    setTimeout(() => {
+      if (navRef.current) {
+        setNavSize({
+          width: navRef.current.offsetWidth,
+          height: navRef.current.offsetHeight,
+        });
+      }
+    }, 100);
     if (eyeRef.current) {
       eyeRef.current.setSpeed(0.6);
     }
@@ -59,7 +61,6 @@ export default function Nav({ active, handleNav }) {
       animate={{
         width: navToggle ? navSize.height : navSize.width,
       }}
-      whileHover={{ scale: navToggle && 1.1 }}
       transition={{
         type: "spring",
         ease: "easeOut",
@@ -67,7 +68,7 @@ export default function Nav({ active, handleNav }) {
         stiffness: 90,
       }}
       style={{ translateX: "-50%" }}
-      className="NavBar fixed bottom-[5svh] left-1/2 flex items-center justify-between gap-2 overflow-hidden rounded-xl bg-grey_08 p-3"
+      className="NavBar fixed bottom-[5svh] left-1/2 z-50 flex items-center justify-between gap-2 overflow-hidden rounded-xl bg-grey_08 p-3"
     >
       <div className="Nav flex">
         <button

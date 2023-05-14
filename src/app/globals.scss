@@ -13,10 +13,17 @@
   * :not(i) {
     @apply font-mono;
   }
+  * {
+    box-sizing: border-box;
+  }
   body {
     @apply bg-bg;
   }
   .flex-center {
     @apply flex items-center justify-center;
+  }
+  .tilt {
+    transform-style: preserve-3d;
+    transform-origin: center;
   }
 }
