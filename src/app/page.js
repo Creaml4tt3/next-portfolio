@@ -32,7 +32,7 @@ export default function Home() {
                 <Card
                   key={card?._id}
                   id={card?._id}
-                  image={card?.image}
+                  image={card?.image ? `/images/${card.image}` : ""}
                   alt={card?.alt}
                   name={card?.name}
                   des={card?.des}

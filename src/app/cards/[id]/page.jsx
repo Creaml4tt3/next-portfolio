@@ -1,109 +1,65 @@
 "use client";
 import { useState, useEffect } from "react";
-import Reveal from "../components/Reveal";
+import Reveal from "@/app/components/Reveal";
 
-import { useSession } from "next-auth/react";
-
-import CardList from "../components/CardList";
-
-export default function Cards() {
-  const { data: session } = useSession({
-    required: true,
-  });
-
+export default function Page({ params }) {
   const [name, setName] = useState("");
   const [image, setImage] = useState("");
   const [alt, setAlt] = useState("");
   const [des, setDes] = useState("");
-  const [level, setLevel] = useState(3);
+  const [level, setLevel] = useState(0);
   const [error, setError] = useState("");
   const [status, setStatus] = useState("");
 
-  const [cards, setCards] = useState([]);
+  const [card, setCard] = useState([]);
 
-  async function getCards() {
+  async function getCard() {
     try {
-      let response = await fetch("/api/cards");
-      let cards = await response.json();
-      return cards;
+      let response = await fetch(`/api/cards/${params.id}`);
+      return await response.json();
     } catch (error) {
       console.error(error);
       setError(error);
     }
   }
+
   useEffect(() => {
-    getCards().then((cards) => setCards(cards));
+    getCard().then((res) => setCard(res));
   }, []);
+  useEffect(() => {
+    setName(card.name ? card.name : "");
+    setImage(card.image ? card.image : "");
+    setAlt(card.alt ? card.alt : "");
+    setDes(card.des ? card.des : "");
+    setLevel(card.level ? card.level : 3);
+  }, [card]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (name && image && des) {
-      try {
-        let response = await fetch("/api/cards", {
-          method: "POST",
-          body: JSON.stringify({
-            name,
-            image,
-            alt,
-            des,
-            level,
-          }),
-        });
-
-        response = await response.json();
-        setStatus("Add Card Success");
-        getCards().then((cards) => setCards(cards));
-        setName("");
-        setImage("");
-        setAlt("");
-        setDes("");
-        setLevel("");
-      } catch (error) {
-        console.error(error);
-        setError(error);
-      }
-    } else {
-      return setError("Name, Image and Description fields are requied!");
-    }
-  };
-
-  const handleDelete = async (id) => {
     try {
-      let response = await fetch(`/api/cards/${id}`, {
-        method: "DELETE",
+      let response = await fetch(`/api/cards/${params.id}`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          name,
+          image,
+          alt,
+          des,
+          level,
+        }),
         headers: {
           Accept: "application/json, text/plain, */*",
           "Content-Type": "application/json",
         },
       });
-
       response = await response.json();
-      setStatus("Delete Card Success");
-      getCards().then((cards) => setCards(cards));
+      setStatus("Edit Card Success");
     } catch (error) {
       console.error(error);
       setError(error);
     }
   };
-
   return (
-    <main className="MainWrapper flex-center h-screen w-screen overflow-x-hidden">
-      <Reveal>
-        <ul className="CardsLists flex max-w-lg flex-col justify-start gap-4">
-          {cards &&
-            cards.length > 0 &&
-            cards.map((card) => {
-              return (
-                <CardList
-                  key={card._id}
-                  card={card}
-                  handleDelete={handleDelete}
-                />
-              );
-            })}
-        </ul>
-      </Reveal>
+    <div>
       <Reveal>
         <form
           className="FormCardsCreate w-96 rounded-lg bg-grey_08 p-4"
@@ -131,7 +87,7 @@ export default function Cards() {
               id="name"
               name="name"
               placeholder="name..."
-              value={name}
+              value={name ? name : ""}
               onChange={(e) => setName(e.target.value)}
               className="Input w-full rounded-md px-3 py-2 text-base text-grey"
             />
@@ -148,8 +104,8 @@ export default function Cards() {
               id="image"
               name="image"
               placeholder="image..."
-              value={image}
-              onChange={(e) => setImage(e.target.value)}
+              value={image ? image : ""}
+              onChange={(e) => setImage(Number(e.target.value))}
               className="Input w-full rounded-md px-3 py-2 text-base text-grey"
             />
           </div>
@@ -165,7 +121,7 @@ export default function Cards() {
               id="alt"
               name="alt"
               placeholder="alt..."
-              value={alt}
+              value={alt ? alt : ""}
               onChange={(e) => setAlt(e.target.value)}
               className="Input w-full rounded-md px-3 py-2 text-base text-grey"
             />
@@ -182,8 +138,8 @@ export default function Cards() {
               id="level"
               name="level"
               placeholder="level..."
-              value={level}
-              onChange={(e) => setLevel(Number(e.target.value))}
+              value={level ? level : ""}
+              onChange={(e) => setLevel(e.target.value)}
               className="Input w-full rounded-md px-3 py-2 text-base text-grey"
             />
           </div>
@@ -200,7 +156,7 @@ export default function Cards() {
               name="des"
               rows={4}
               placeholder="description..."
-              value={des}
+              value={des ? des : ""}
               onChange={(e) => setDes(e.target.value)}
               className="Input w-full rounded-md px-3 py-2 text-base text-grey"
             />
@@ -209,10 +165,10 @@ export default function Cards() {
             type="submit"
             className="SubmitButton rounded-lg bg-blue px-3 py-2"
           >
-            <span className="SubmitButtonText text-white">Add Card</span>
+            <span className="SubmitButtonText text-white">Edit Card</span>
           </button>
         </form>
       </Reveal>
-    </main>
+    </div>
   );
 }

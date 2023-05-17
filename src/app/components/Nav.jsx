@@ -5,7 +5,7 @@ import Lottie from "lottie-react";
 
 import eyeLottie from "@public/lotties/eye.json";
 
-export default function Nav({ active, handleNav }) {
+export default function Nav({ active, handleNav, handleClick }) {
   const [navToggle, setNavToggle] = useState(false);
   const [navSize, setNavSize] = useState({});
   const navRef = useRef(null);
@@ -48,10 +48,22 @@ export default function Nav({ active, handleNav }) {
   };
 
   const navMenus = [
-    "Web Development",
-    "Graphic & Illustrator",
-    "3D Modeling",
-    "Motion Graphic",
+    {
+      name: "Web Development",
+      url: "web-development",
+    },
+    {
+      name: "Graphic & Illustrator",
+      url: "graphic-&-illurtrator",
+    },
+    {
+      name: "3D Modeling",
+      url: "3d-modeling",
+    },
+    {
+      name: "Motion Graphic",
+      url: "montion-graphic",
+    },
   ];
 
   return (
@@ -72,7 +84,10 @@ export default function Nav({ active, handleNav }) {
     >
       <div className="Nav flex">
         <button
-          onClick={() => handleNav("creaml4tt3")}
+          onClick={() => {
+            handleNav("creaml4tt3");
+            handleClick("/");
+          }}
           className={`NavButton group rounded-md border border-solid border-blue bg-blue px-3 py-3  transition-all duration-300 hover:border-white ${
             active === "creaml4tt3" ? "border-white" : ""
           }`}
@@ -91,14 +106,17 @@ export default function Nav({ active, handleNav }) {
           navMenus.map((menu) => {
             return (
               <button
-                key={menu}
-                onClick={() => handleNav(menu)}
+                key={menu.name}
+                onClick={() => {
+                  handleNav(menu.name);
+                  handleClick(menu.url);
+                }}
                 className={`NavButton min-w-max rounded-lg border border-solid border-grey_08 bg-grey_08 px-3 py-3 transition-all duration-300 hover:border-white ${
-                  active === menu ? "border-white" : ""
+                  active === menu.name ? "border-white" : ""
                 }`}
               >
                 <span className="NavText text-base font-normal text-white">
-                  {menu}
+                  {menu.name}
                 </span>
               </button>
             );
