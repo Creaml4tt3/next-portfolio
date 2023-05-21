@@ -3,7 +3,6 @@ import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import Lottie from "lottie-react";
-
 import eyeLottie from "@public/lotties/eye.json";
 
 export default function Nav({ active, handleNav }) {
@@ -29,10 +28,12 @@ export default function Nav({ active, handleNav }) {
 
   const handleResize = () => {
     if (!navToggle) {
-      setNavSize({
-        width: navRef.current.offsetWidth,
-        height: navRef.current.offsetHeight,
-      });
+      if (navRef.current) {
+        setNavSize({
+          width: navRef.current.offsetWidth,
+          height: navRef.current.offsetHeight,
+        });
+      }
     }
   };
 
@@ -51,19 +52,19 @@ export default function Nav({ active, handleNav }) {
   const navMenus = [
     {
       name: "Web Development",
-      url: "web-development",
+      url: "/web-development",
     },
     {
       name: "Graphic & Illustrator",
-      url: "graphic-&-illustrator",
+      url: "/graphic-&-illustrator",
     },
     {
       name: "3D Modeling",
-      url: "3d-modeling",
+      url: "/3d-modeling",
     },
     {
       name: "Motion Graphic",
-      url: "montion-graphic",
+      url: "/montion-graphic",
     },
   ];
 
@@ -86,14 +87,14 @@ export default function Nav({ active, handleNav }) {
       <div className="Nav flex">
         <Link href={"/"}>
           <button
-            onClick={() => handleNav("creaml4tt3")}
+            onClick={() => handleNav("/")}
             className={`NavButton group rounded-md border border-solid border-blue bg-blue px-3 py-4 transition-all duration-300 hover:border-white ${
-              active === "creaml4tt3" ? "border-white" : ""
+              active === "/" ? "border-white" : ""
             }`}
           >
             <span
               className={`NavText text-base font-bold text-grey transition-all duration-300 group-hover:text-white ${
-                active === "creaml4tt3" ? "text-white" : ""
+                active === "/" ? "text-white" : ""
               }`}
             >
               creaml4tt3
@@ -107,9 +108,9 @@ export default function Nav({ active, handleNav }) {
             return (
               <Link key={menu.name} href={menu.url}>
                 <button
-                  onClick={() => handleNav(menu.name)}
+                  onClick={() => handleNav(menu.url)}
                   className={`NavButton min-w-max rounded-lg border border-solid border-grey_08 bg-grey_08 px-3 py-4 transition-all duration-300 hover:border-white ${
-                    active === menu.name ? "border-white" : ""
+                    active === menu.url ? "border-white" : ""
                   }`}
                 >
                   <span className="NavText text-base font-normal text-white">

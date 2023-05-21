@@ -3,12 +3,14 @@ import Image from "next/image";
 import dynamic from "next/dynamic";
 
 import { useState, useEffect } from "react";
+import { Canvas } from "@react-three/fiber";
 
 import { getCards } from "./mutate/getCards";
 
 const Reveal = dynamic(() => import("./components/Reveal"));
 const Rive = dynamic(() => import("./components/Rive"), { ssr: false });
 const Card = dynamic(() => import("./components/Card"), { ssr: false });
+const Blob = dynamic(() => import("./components/Blob"), { ssr: false });
 
 export default function Home() {
   const [cards, setCards] = useState([]);
@@ -16,7 +18,7 @@ export default function Home() {
     getCards().then((cards) => setCards(JSON.parse(cards)));
   }, []);
   return (
-    <main className="MainWrapper min-h-screen overflow-x-hidden overflow-y-visible">
+    <div className="PageWrapper h-full min-h-screen overflow-x-hidden overflow-y-visible">
       <section className="CardCollection flex-center mx-auto overflow-visible">
         {cards &&
           cards.length > 0 &&
@@ -48,6 +50,6 @@ export default function Home() {
       >
         <Rive />
       </Reveal> */}
-    </main>
+    </div>
   );
 }

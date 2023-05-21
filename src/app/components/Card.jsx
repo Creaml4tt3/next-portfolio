@@ -45,6 +45,7 @@ export default function Card({
       glareMaxOpacity={0.3}
       glareBorderRadius="16px"
       perspective={640}
+      transitionSpeed={1000}
       className={
         "Card flex-center group relative m-0 h-fit w-fit flex-col rounded-2xl bg-white px-4 py-4 shadow-2xl backdrop-blur backdrop-brightness-125 " +
         className
