@@ -1,17 +1,20 @@
 "use client";
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import Reveal from "@/app/components/Reveal";
+import axios from "axios";
 
 export default function Page({ params }) {
   const [name, setName] = useState("");
   const [image, setImage] = useState("");
+  const [tempImage, setTempImage] = useState("");
   const [alt, setAlt] = useState("");
   const [des, setDes] = useState("");
   const [level, setLevel] = useState(0);
   const [error, setError] = useState("");
   const [status, setStatus] = useState("");
 
-  const [card, setCard] = useState([]);
+  const [card, setCard] = useState(false);
 
   async function getCard() {
     try {
@@ -23,25 +26,58 @@ export default function Page({ params }) {
     }
   }
 
+  async function uploadFile() {
+    const data = new FormData();
+    data.append("file", image);
+    data.append("public_id", `creaml4tt3/${image.name}`);
+    data.append("upload_preset", "creaml4tt3");
+    try {
+      const response = await axios.post(
+        "https://api.cloudinary.com/v1_1/duoaqfhpz/image/upload",
+        data
+      );
+      return response;
+    } catch (error) {
+      console.error(error);
+      throw new Error(error);
+    }
+  }
+
   useEffect(() => {
     getCard().then((res) => setCard(res));
   }, []);
   useEffect(() => {
-    setName(card.name ? card.name : "");
-    setImage(card.image ? card.image : "");
-    setAlt(card.alt ? card.alt : "");
-    setDes(card.des ? card.des : "");
-    setLevel(card.level ? card.level : 3);
+    if (card) {
+      setName(card.name ? card.name : "");
+      setImage(card.image ? card.image : "");
+      setAlt(card.alt ? card.alt : "");
+      setDes(card.des ? card.des : "");
+      setLevel(card.level ? card.level : 3);
+    }
   }, [card]);
+  useEffect(() => {
+    if (image.length > 0) {
+      setTempImage(image);
+    }
+    if (typeof image === "object") {
+      const imageUrl = URL.createObjectURL(image);
+      setTempImage(imageUrl);
+    }
+  }, [image]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    let imageUrl;
+    await uploadFile().then((res) => {
+      console.log(res);
+      imageUrl = res.data.secure_url;
+    });
     try {
       let response = await fetch(`/api/cards/${params.id}`, {
         method: "PATCH",
         body: JSON.stringify({
           name,
-          image,
+          imageUrl,
           alt,
           des,
           level,
@@ -99,14 +135,15 @@ export default function Page({ params }) {
             >
               Image
             </label>
+            {tempImage && (
+              <Image src={tempImage} alt={alt} width={120} height={120} />
+            )}
             <input
-              type="text"
+              type="file"
               id="image"
               name="image"
-              placeholder="image..."
-              value={image ? image : ""}
-              onChange={(e) => setImage(Number(e.target.value))}
-              className="Input w-full rounded-md px-3 py-2 text-base text-grey"
+              onChange={(e) => setImage(e.target.files[0])}
+              className="Input w-full rounded-md px-3 py-2 text-base text-white"
             />
           </div>
           <div className="FormWraper">
@@ -139,7 +176,7 @@ export default function Page({ params }) {
               name="level"
               placeholder="level..."
               value={level ? level : ""}
-              onChange={(e) => setLevel(e.target.value)}
+              onChange={(e) => setLevel(Number(e.target.value))}
               className="Input w-full rounded-md px-3 py-2 text-base text-grey"
             />
           </div>

@@ -1,20 +1,30 @@
 import Image from "next/image";
 
 export default function CardList({ card, handleDelete }) {
+  function isValidUrl(string) {
+    try {
+      new URL(string);
+      return true;
+    } catch (err) {
+      return false;
+    }
+  }
   return (
     <li
       key={card?._id}
       id={card?._id}
       className="CardList flex w-full items-center justify-start gap-2 rounded-lg bg-grey_08 px-3 py-2"
     >
-      <Image
-        src={card.image ? `/images/${card.image}` : "/images/"}
-        alt={card.alt ? card.alt : "No Alt"}
-        width={40}
-        height={40}
-        loading="lazy"
-        className="CardListImage"
-      />
+      {isValidUrl(card.image) && (
+        <Image
+          src={card.image}
+          alt={card.alt ? card.alt : "No Alt"}
+          width={40}
+          height={40}
+          loading="lazy"
+          className="CardListImage"
+        />
+      )}
       <span className="CardListName flex-1 uppercase text-blue">
         {card.name ? card.name : "ไม่ค้นพบชื่อ"}
       </span>

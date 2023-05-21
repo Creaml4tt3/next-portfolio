@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import Lottie from "lottie-react";
+import { motion } from "framer-motion";
 import Tilt from "react-parallax-tilt";
 import ImagePlaceholder from "@public/lotties/image_placeholder.json";
 import { useState, useEffect, useRef } from "react";
@@ -34,42 +35,41 @@ export default function Card({
 
   return (
     <Tilt
+      ref={cardRef}
       gyroscope
       tiltReverse
       glareEnable
-      glareColor="#5529f0"
+      glareReverse
+      glareColor="#5299f0"
       glarePosition="all"
       glareMaxOpacity={0.3}
-      className="CardTilt h-fit w-fit overflow-visible"
+      glareBorderRadius="16px"
+      perspective={640}
+      className={
+        "Card flex-center group relative m-0 h-fit w-fit flex-col rounded-2xl bg-white px-4 py-4 shadow-2xl backdrop-blur backdrop-brightness-125 " +
+        className
+      }
     >
-      <div
-        ref={cardRef}
-        className={
-          "Card flex-center bg-grey08 preserv m-0 h-fit w-fit flex-col overflow-visible rounded-xl border-2 border-solid border-white bg-grey_08 px-4 pb-8 pt-4 backdrop-blur backdrop-brightness-125 " +
-          className
-        }
-      >
-        <div className="CardImage relative h-60 w-72 overflow-hidden rounded-2xl border border-solid border-white bg-grey_08 backdrop-blur">
-          {image ? (
-            <Image
-              src={image}
-              alt={alt}
-              fill
-              sizes="(min-width: 320px) 280px"
-              loading="lazy"
-              placeholder="blur"
-              blurDataURL={image}
-              className="CardImageImg object-cover"
-            />
-          ) : (
-            <Lottie
-              animationData={ImagePlaceholder}
-              style={{ width: 280, height: 240 }}
-              className="LottieImageHolder absolute left-0 top-0"
-            />
-          )}
-        </div>
-        <div className="CardLevel my-3 flex w-full flex-row-reverse justify-start gap-2">
+      <div className="CardImage flex-center relative h-96 w-64 overflow-hidden rounded-xl border border-solid border-blue bg-grey backdrop-blur">
+        {image ? (
+          <Image
+            src={image}
+            alt={alt}
+            fill
+            sizes="(min-width: 320px) 1024px"
+            loading="lazy"
+            placeholder="blur"
+            blurDataURL={image}
+            className="CardImageImg object-cover"
+          />
+        ) : (
+          <Lottie
+            animationData={ImagePlaceholder}
+            style={{ width: 254, height: 392 }}
+            className="LottieImageHolder absolute left-0 top-0"
+          />
+        )}
+        <div className="CardLevel absolute right-4 top-1 my-3 flex w-full flex-row-reverse justify-start gap-2">
           {cardLevel &&
             cardLevel.map((currentLevel, index) => {
               return (
@@ -78,13 +78,14 @@ export default function Card({
                   className={`CardPerLevel h-3 w-3 rounded-full border border-solid ${
                     currentLevel === 1
                       ? "CardPerLevelActive bg-blue"
-                      : "bg-grey"
+                      : "bg-transparent"
                   }`}
                 />
               );
             })}
         </div>
-        <div className="CardDetail flex w-72 flex-col items-start justify-start">
+        <div className="CardDetailLayer absolute left-0 top-0 h-full w-full bg-grey_08 opacity-0 blur-3xl transition-all duration-300 group-hover:opacity-100" />
+        <motion.div className="CardDetail pointer-events-none absolute flex flex-col items-start justify-start px-4 opacity-0 transition-all duration-300 group-hover:pointer-events-auto group-hover:opacity-100">
           <div className="CardName flex-center w-full">
             <span className="CardNameText text-center text-base uppercase text-white">
               {name ? name : "ไม่พบชื่อ"}
@@ -92,13 +93,12 @@ export default function Card({
           </div>
           <hr className="LineBreak my-2 w-full bg-white" />
           <div className="CardDescription">
-            <p className="CardNameText text-justify text-xs font-normal text-white">
+            <p className="CardNameText text-center text-xs font-normal text-white">
               {des ? des : "ไม่พบคำอธิบาย"}
             </p>
           </div>
-        </div>
+        </motion.div>
         {children}
-        <hr className="LineBreak mt-3 w-full bg-white" />
       </div>
     </Tilt>
   );

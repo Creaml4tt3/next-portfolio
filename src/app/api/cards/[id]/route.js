@@ -37,7 +37,7 @@ export async function PATCH(request, { params }) {
     try {
       const client = await clientPromise;
       const db = client.db("cards");
-      const { name, image, alt, des, level } = await request.json();
+      const { name, imageUrl, alt, des, level } = await request.json();
       const { id } = await params;
 
       const card = await db.collection("cards").updateOne(
@@ -47,7 +47,7 @@ export async function PATCH(request, { params }) {
         {
           $set: {
             name: name,
-            image: image,
+            image: imageUrl,
             alt: alt,
             des: des,
             level: level,

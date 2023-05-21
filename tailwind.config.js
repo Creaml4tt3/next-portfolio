@@ -1,10 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
-  ],
+  content: ["./src/app/**/*.{js,ts,jsx,tsx,mdx}"],
   theme: {
     extend: {
       colors: {
@@ -14,6 +10,8 @@ module.exports = {
         white: "#ffffff",
         blue: "#5299f0",
         blue_08: "rgba(82,153,240,0.8)",
+        pink: "#E97090",
+        red: "#AE395E",
       },
       fontFamily: {
         mono: ["Font", "sans-serif"],
@@ -21,5 +19,5 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [require("tailwind-scrollbar")],
 };

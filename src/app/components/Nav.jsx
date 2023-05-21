@@ -1,11 +1,12 @@
 "use client";
+import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import Lottie from "lottie-react";
 
 import eyeLottie from "@public/lotties/eye.json";
 
-export default function Nav({ active, handleNav, handleClick }) {
+export default function Nav({ active, handleNav }) {
   const [navToggle, setNavToggle] = useState(false);
   const [navSize, setNavSize] = useState({});
   const navRef = useRef(null);
@@ -54,7 +55,7 @@ export default function Nav({ active, handleNav, handleClick }) {
     },
     {
       name: "Graphic & Illustrator",
-      url: "graphic-&-illurtrator",
+      url: "graphic-&-illustrator",
     },
     {
       name: "3D Modeling",
@@ -80,45 +81,42 @@ export default function Nav({ active, handleNav, handleClick }) {
         stiffness: 90,
       }}
       style={{ translateX: "-50%" }}
-      className="NavBar fixed bottom-[5svh] left-1/2 z-50 flex items-center justify-between gap-2 overflow-hidden rounded-xl bg-grey_08 p-3"
+      className="NavBar fixed bottom-[5svh] left-1/2 z-50 flex items-center justify-between gap-2 overflow-hidden rounded-xl bg-grey_08 p-2"
     >
       <div className="Nav flex">
-        <button
-          onClick={() => {
-            handleNav("creaml4tt3");
-            handleClick("/");
-          }}
-          className={`NavButton group rounded-md border border-solid border-blue bg-blue px-3 py-3  transition-all duration-300 hover:border-white ${
-            active === "creaml4tt3" ? "border-white" : ""
-          }`}
-        >
-          <span
-            className={`NavText text-base font-bold text-grey transition-all duration-300 group-hover:text-white ${
-              active === "creaml4tt3" ? "text-white" : ""
+        <Link href={"/"}>
+          <button
+            onClick={() => handleNav("creaml4tt3")}
+            className={`NavButton group rounded-md border border-solid border-blue bg-blue px-3 py-4 transition-all duration-300 hover:border-white ${
+              active === "creaml4tt3" ? "border-white" : ""
             }`}
           >
-            creaml4tt3
-          </span>
-        </button>
+            <span
+              className={`NavText text-base font-bold text-grey transition-all duration-300 group-hover:text-white ${
+                active === "creaml4tt3" ? "text-white" : ""
+              }`}
+            >
+              creaml4tt3
+            </span>
+          </button>
+        </Link>
       </div>
       <div className="Nav flex-center gap-2">
         {navMenus &&
           navMenus.map((menu) => {
             return (
-              <button
-                key={menu.name}
-                onClick={() => {
-                  handleNav(menu.name);
-                  handleClick(menu.url);
-                }}
-                className={`NavButton min-w-max rounded-lg border border-solid border-grey_08 bg-grey_08 px-3 py-3 transition-all duration-300 hover:border-white ${
-                  active === menu.name ? "border-white" : ""
-                }`}
-              >
-                <span className="NavText text-base font-normal text-white">
-                  {menu.name}
-                </span>
-              </button>
+              <Link key={menu.name} href={menu.url}>
+                <button
+                  onClick={() => handleNav(menu.name)}
+                  className={`NavButton min-w-max rounded-lg border border-solid border-grey_08 bg-grey_08 px-3 py-4 transition-all duration-300 hover:border-white ${
+                    active === menu.name ? "border-white" : ""
+                  }`}
+                >
+                  <span className="NavText text-base font-normal text-white">
+                    {menu.name}
+                  </span>
+                </button>
+              </Link>
             );
           })}
       </div>

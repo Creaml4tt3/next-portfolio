@@ -1,50 +1,78 @@
 "use client";
-import { useState, useEffect } from "react";
-import Reveal from "../components/Reveal";
-
+import Image from "next/image";
+import dynamic from "next/dynamic";
+import { useState, useEffect, useRef } from "react";
+import axios from "axios";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { getCards } from "../mutate/getCards";
 
-import CardList from "../components/CardList";
+const Reveal = dynamic(() => import("../components/Reveal"), { ssr: false });
+const CardList = dynamic(() => import("../components/CardList"), {
+  ssr: false,
+});
 
 export default function Cards() {
+  const router = useRouter();
+
   const { data: session } = useSession({
     required: true,
+    onUnauthenticated() {
+      router.push("/auth/signin");
+    },
   });
 
   const [name, setName] = useState("");
   const [image, setImage] = useState("");
+  const [tempImage, setTempImage] = useState("");
   const [alt, setAlt] = useState("");
   const [des, setDes] = useState("");
   const [level, setLevel] = useState(3);
   const [error, setError] = useState("");
   const [status, setStatus] = useState("");
+  const [cards, setCards] = useState([""]);
 
-  const [cards, setCards] = useState([]);
+  const imageRef = useRef(null);
 
-  async function getCards() {
+  async function uploadFile() {
+    const data = new FormData();
+    data.append("file", image);
+    data.append("public_id", `creaml4tt3/${image.name}`);
+    data.append("upload_preset", "creaml4tt3");
     try {
-      let response = await fetch("/api/cards");
-      let cards = await response.json();
-      return cards;
+      const response = await axios.post(
+        "https://api.cloudinary.com/v1_1/duoaqfhpz/image/upload",
+        data
+      );
+      return response;
     } catch (error) {
       console.error(error);
-      setError(error);
+      throw new Error(error);
     }
   }
-  useEffect(() => {
-    getCards().then((cards) => setCards(cards));
-  }, []);
 
+  useEffect(() => {
+    getCards().then((cards) => setCards(JSON.parse(cards)));
+  }, []);
+  useEffect(() => {
+    if (typeof image === "object") {
+      const imageUrl = URL.createObjectURL(image);
+      setTempImage(imageUrl);
+    }
+  }, [image]);
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (name && image && des) {
+      let imageUrl;
+      await uploadFile().then((res) => {
+        imageUrl = res.data.secure_url;
+      });
       try {
         let response = await fetch("/api/cards", {
           method: "POST",
           body: JSON.stringify({
             name,
-            image,
+            imageUrl,
             alt,
             des,
             level,
@@ -52,13 +80,16 @@ export default function Cards() {
         });
 
         response = await response.json();
+        setError("");
         setStatus("Add Card Success");
-        getCards().then((cards) => setCards(cards));
+        getCards().then((cards) => setCards(JSON.parse(cards)));
         setName("");
         setImage("");
+        imageRef.current.value = "";
+        setTempImage("");
         setAlt("");
         setDes("");
-        setLevel("");
+        setLevel(3);
       } catch (error) {
         console.error(error);
         setError(error);
@@ -72,15 +103,11 @@ export default function Cards() {
     try {
       let response = await fetch(`/api/cards/${id}`, {
         method: "DELETE",
-        headers: {
-          Accept: "application/json, text/plain, */*",
-          "Content-Type": "application/json",
-        },
       });
 
       response = await response.json();
       setStatus("Delete Card Success");
-      getCards().then((cards) => setCards(cards));
+      getCards().then((cards) => setCards(JSON.parse(cards)));
     } catch (error) {
       console.error(error);
       setError(error);
@@ -93,13 +120,9 @@ export default function Cards() {
         <ul className="CardsLists flex max-w-lg flex-col justify-start gap-4">
           {cards &&
             cards.length > 0 &&
-            cards.map((card) => {
+            cards.map((card, index) => {
               return (
-                <CardList
-                  key={card._id}
-                  card={card}
-                  handleDelete={handleDelete}
-                />
+                <CardList key={index} card={card} handleDelete={handleDelete} />
               );
             })}
         </ul>
@@ -137,6 +160,9 @@ export default function Cards() {
             />
           </div>
           <div className="FormWraper">
+            {tempImage && (
+              <Image src={tempImage} alt={alt} width={120} height={120} />
+            )}
             <label
               htmlFor="image"
               className="InputLabel text-base font-medium text-white"
@@ -144,13 +170,12 @@ export default function Cards() {
               Image
             </label>
             <input
-              type="text"
+              ref={imageRef}
+              type="file"
               id="image"
               name="image"
-              placeholder="image..."
-              value={image}
-              onChange={(e) => setImage(e.target.value)}
-              className="Input w-full rounded-md px-3 py-2 text-base text-grey"
+              onChange={(e) => setImage(e.target.files[0])}
+              className="Input y w-full rounded-md px-3 py-2 text-base text-white"
             />
           </div>
           <div className="FormWraper">

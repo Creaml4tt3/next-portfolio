@@ -33,10 +33,10 @@ export async function POST(request) {
     try {
       const client = await clientPromise;
       const db = client.db("cards");
-      const { name, image, alt, des, level } = await request.json();
+      const { name, imageUrl, alt, des, level } = await request.json();
       const card = await db.collection("cards").insertOne({
         name: name,
-        image: image,
+        image: imageUrl,
         alt: alt,
         des: des,
         level: level,

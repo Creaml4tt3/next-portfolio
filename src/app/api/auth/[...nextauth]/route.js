@@ -18,6 +18,10 @@ export const authOptions = {
       return session;
     },
   },
+  pages: {
+    signIn: "/auth/signin",
+    signOut: "/auth/signout",
+  },
   providers: [
     CredentialsProvider({
       name: "Sign in",
@@ -37,11 +41,11 @@ export const authOptions = {
             email: credentials.email,
           });
           if (user && bcrypt.compareSync(credentials.password, user.password)) {
-            console.log(user);
             return {
               _id: user._id,
               name: user.name,
               email: user.email,
+              leave: user.level,
             };
           } else {
             throw new Error("Invalid Email or Password");
