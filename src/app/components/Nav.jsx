@@ -1,15 +1,16 @@
 "use client";
-import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import Lottie from "lottie-react";
 import eyeLottie from "@public/lotties/eye.json";
+import { useRouter } from "next/navigation";
 
 export default function Nav({ active, handleNav }) {
   const [navToggle, setNavToggle] = useState(false);
   const [navSize, setNavSize] = useState({});
   const navRef = useRef(null);
   const eyeRef = useRef(null);
+  const router = useRouter();
   useEffect(() => {
     document.addEventListener("wheel", handleWheel);
     window.addEventListener("resize", handleResize);
@@ -49,6 +50,13 @@ export default function Nav({ active, handleNav }) {
     setNavToggle(!navToggle);
   };
 
+  const handleRedirect = (url) => {
+    handleNav(url);
+    setTimeout(() => {
+      router.push(url);
+    }, 300);
+  };
+
   const navMenus = [
     {
       name: "Web Development",
@@ -85,39 +93,36 @@ export default function Nav({ active, handleNav }) {
       className="NavBar fixed bottom-[5svh] left-1/2 z-50 flex items-center justify-between gap-2 overflow-hidden rounded-xl bg-grey_08 p-2"
     >
       <div className="Nav flex">
-        <Link href={"/"}>
-          <button
-            onClick={() => handleNav("/")}
-            className={`NavButton group rounded-md border border-solid border-blue bg-blue px-3 py-4 transition-all duration-300 hover:border-white ${
-              active === "/" ? "border-white" : ""
+        <button
+          onClick={() => handleRedirect("/")}
+          className={`NavButton group rounded-md border border-solid border-blue bg-blue px-3 py-4 transition-all duration-300 hover:border-white ${
+            active === "/" ? "border-white" : ""
+          }`}
+        >
+          <span
+            className={`NavText text-base font-bold text-grey transition-all duration-300 group-hover:text-white ${
+              active === "/" ? "text-white" : ""
             }`}
           >
-            <span
-              className={`NavText text-base font-bold text-grey transition-all duration-300 group-hover:text-white ${
-                active === "/" ? "text-white" : ""
-              }`}
-            >
-              creaml4tt3
-            </span>
-          </button>
-        </Link>
+            creaml4tt3
+          </span>
+        </button>
       </div>
       <div className="Nav flex-center gap-2">
         {navMenus &&
           navMenus.map((menu) => {
             return (
-              <Link key={menu.name} href={menu.url}>
-                <button
-                  onClick={() => handleNav(menu.url)}
-                  className={`NavButton min-w-max rounded-lg border border-solid border-grey_08 bg-grey_08 px-3 py-4 transition-all duration-300 hover:border-white ${
-                    active === menu.url ? "border-white" : ""
-                  }`}
-                >
-                  <span className="NavText text-base font-normal text-white">
-                    {menu.name}
-                  </span>
-                </button>
-              </Link>
+              <button
+                key={menu.name}
+                onClick={() => handleRedirect(menu.url)}
+                className={`NavButton min-w-max rounded-lg border border-solid border-grey_08 bg-grey_08 px-3 py-4 transition-all duration-300 hover:border-white ${
+                  active === menu.url ? "border-white" : ""
+                }`}
+              >
+                <span className="NavText text-base font-normal text-white">
+                  {menu.name}
+                </span>
+              </button>
             );
           })}
       </div>

@@ -19,7 +19,7 @@ export default function Home() {
   }, []);
   return (
     <div className="PageWrapper h-full min-h-screen overflow-x-hidden overflow-y-visible">
-      <section className="CardCollection flex-center mx-auto overflow-visible">
+      <section className="CardCollection flex-center mx-auto flex-wrap overflow-visible">
         {cards &&
           cards.length > 0 &&
           cards.map((card, index) => {

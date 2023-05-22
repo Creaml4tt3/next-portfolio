@@ -20,11 +20,21 @@ export default function RootLayout({ children, session }) {
     setNavActive(active);
   };
 
+  useEffect(() => {
+    console.log(pathname);
+  }, []);
+
   const variants = {
     hidden: { opacity: 0, y: -100 },
     enter: { opacity: 1, y: 0 },
     exit: { opacity: 0, y: 100 },
   };
+
+  //exit=>hidden=>enter
+
+  useEffect(() => {
+    console.log(navActive);
+  }, [navActive]);
 
   return (
     <html lang="en">
@@ -40,7 +50,7 @@ export default function RootLayout({ children, session }) {
               transition={{
                 //type: "spring",
                 //stiffness: 100,
-                duration: 0.5,
+                duration: 0.35,
               }}
               className="MainWrapper overflow-x-hidden overflow-y-visible"
             >
