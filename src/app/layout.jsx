@@ -11,30 +11,26 @@ import { SessionProvider } from "next-auth/react";
 import { usePathname } from "next/navigation";
 
 const Nav = dynamic(() => import("./components/Nav"), { ssr: false });
+const Modal = dynamic(() => import("./components/Modal"), { ssr: false });
 
 export default function RootLayout({ children, session }) {
   const [pathname, setPathname] = useState(usePathname());
   const [navActive, setNavActive] = useState(pathname ? pathname : "/");
+  const [modalActive, setModalActive] = useState(true);
+
+  const handleModal = (active) => {
+    setModalActive(active);
+  };
 
   const handleNav = (active) => {
     setNavActive(active);
   };
-
-  useEffect(() => {
-    console.log(pathname);
-  }, []);
 
   const variants = {
     hidden: { opacity: 0, y: -100 },
     enter: { opacity: 1, y: 0 },
     exit: { opacity: 0, y: 100 },
   };
-
-  //exit=>hidden=>enter
-
-  useEffect(() => {
-    console.log(navActive);
-  }, [navActive]);
 
   return (
     <html lang="en">
@@ -54,6 +50,15 @@ export default function RootLayout({ children, session }) {
               }}
               className="MainWrapper overflow-x-hidden overflow-y-visible"
             >
+              {modalActive && (
+                <Modal handleModal={handleModal}>
+                  <div className="ModalContent flex-center h-full">
+                    <span className="ModalText text-center text-xl font-medium text-white">
+                      กำลังดำเนินการ <br /> Currently Work In Progress
+                    </span>
+                  </div>
+                </Modal>
+              )}
               <Nav active={navActive} handleNav={handleNav} />
               {children}
             </motion.main>
