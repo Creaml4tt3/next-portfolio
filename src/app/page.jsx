@@ -39,7 +39,7 @@ export default function Home() {
             );
           })}
       </section>
-      {/*       <Reveal
+      <Reveal
         before={{ scale: 0, opacity: 0 }}
         after={{ scale: 1, opacity: 1 }}
         transition={{
@@ -49,7 +49,7 @@ export default function Home() {
         }}
       >
         <Rive />
-      </Reveal> */}
+      </Reveal>
     </div>
   );
 }
