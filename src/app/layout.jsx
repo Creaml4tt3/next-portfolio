@@ -14,7 +14,7 @@ const Nav = dynamic(() => import("./components/Nav"), { ssr: false });
 const Modal = dynamic(() => import("./components/Modal"), { ssr: false });
 
 export default function RootLayout({ children, session }) {
-  const [pathname, setPathname] = useState(usePathname());
+  const pathname = usePathname();
   const [navActive, setNavActive] = useState(pathname ? pathname : "/");
   const [modalActive, setModalActive] = useState(true);
 
@@ -38,15 +38,14 @@ export default function RootLayout({ children, session }) {
         <SessionProvider session={session}>
           <AnimatePresence mode="wait" initial={false}>
             <motion.main
-              key={navActive}
+              key={pathname}
               variants={variants}
               initial="hidden"
               animate="enter"
-              exit="exit"
               transition={{
-                //type: "spring",
-                //stiffness: 100,
-                duration: 0.35,
+                type: "spring",
+                stiffness: 100,
+                duration: 0.5,
               }}
               className="MainWrapper overflow-x-hidden overflow-y-visible"
             >

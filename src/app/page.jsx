@@ -1,9 +1,9 @@
 "use client";
 import Image from "next/image";
 import dynamic from "next/dynamic";
+import { motion } from "framer-motion";
 
 import { useState, useEffect } from "react";
-import { Canvas } from "@react-three/fiber";
 
 import { getCards } from "./mutate/getCards";
 
@@ -25,29 +25,33 @@ export default function Home() {
           cards.map((card, index) => {
             return (
               <Reveal key={index} className="mx-auto overflow-visible">
-                <Card
-                  key={card?._id}
-                  id={card?._id}
-                  image={card?.image}
-                  alt={card?.alt}
-                  name={card?.name}
-                  des={card?.des}
-                  level={card?.level}
-                  count={card?.count}
-                />
+                <motion.div
+                  drag
+                  dragTransition={{ bounceStiffness: 100, bounceDamping: 10 }}
+                  dragConstraints={{
+                    top: 0,
+                    right: 0,
+                    bottom: 0,
+                    left: 0,
+                  }}
+                  whileHover={{ cursor: "grab" }}
+                >
+                  <Card
+                    key={card?._id}
+                    id={card?._id}
+                    image={card?.image}
+                    alt={card?.alt}
+                    name={card?.name}
+                    des={card?.des}
+                    level={card?.level}
+                    count={card?.count}
+                  />
+                </motion.div>
               </Reveal>
             );
           })}
       </section>
-      <Reveal
-        before={{ scale: 0, opacity: 0 }}
-        after={{ scale: 1, opacity: 1 }}
-        transition={{
-          type: "spring",
-          duration: 0.5,
-          stiffness: 90,
-        }}
-      >
+      <Reveal>
         <Rive />
       </Reveal>
     </div>

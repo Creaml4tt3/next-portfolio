@@ -11,7 +11,7 @@ module.exports = {
         blue: "#5299f0",
         blue_08: "rgba(82,153,240,0.8)",
         pink: "#E97090",
-        red: "#AE395E",
+        redder: "#AE395E",
       },
       fontFamily: {
         mono: ["Font", "sans-serif"],

@@ -6,7 +6,7 @@ export default function Reveal({
   children,
   before = { opacity: 0, y: -100 },
   after = { opacity: 1, y: 0 },
-  transition = { duration: 0.5, type: "spring", stiffness: 100 },
+  transition = { duration: 0.5, type: "spring", stiffness: 100, delay: 0.35 },
   className = "",
 }) {
   const ref = useRef(null);

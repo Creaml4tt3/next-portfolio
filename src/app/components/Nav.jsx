@@ -52,9 +52,7 @@ export default function Nav({ active, handleNav }) {
 
   const handleRedirect = (url) => {
     handleNav(url);
-    setTimeout(() => {
-      router.replace(url);
-    }, 250);
+    router.replace(url);
   };
 
   const navMenus = [
