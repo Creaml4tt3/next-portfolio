@@ -12,7 +12,7 @@ export default function Blob() {
       u_time: { value: 0 },
       u_intensity: { value: 0.3 },
     };
-  });
+  }, []);
 
   useFrame((state) => {
     const { clock } = state;
@@ -31,7 +31,7 @@ export default function Blob() {
   return (
     <mesh
       ref={mesh}
-      scale={1.5}
+      scale={2}
       position={[0, 0, 0]}
       onPointerOver={() => (hover.current = true)}
       onPointerOut={() => (hover.current = false)}

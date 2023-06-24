@@ -51,6 +51,7 @@ export async function PATCH(request, { params }) {
             alt: alt,
             des: des,
             level: level,
+            updated_at: Date.now(),
           },
         }
       );

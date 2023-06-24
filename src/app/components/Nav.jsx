@@ -88,7 +88,7 @@ export default function Nav({ active, handleNav }) {
         stiffness: 90,
       }}
       style={{ translateX: "-50%" }}
-      className="NavBar fixed bottom-[5svh] left-1/2 z-50 flex items-center justify-between gap-2 overflow-hidden rounded-xl bg-grey_08 p-2"
+      className="NavBar fixed bottom-[5svh] left-1/2 z-50 flex items-center justify-between gap-2 overflow-hidden rounded-xl bg-softGrey p-2"
     >
       <div className="Nav flex">
         <button

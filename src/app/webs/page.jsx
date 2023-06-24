@@ -6,12 +6,12 @@ import axios from "axios";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { getCards } from "../mutate/getCards";
+
 import { addCard } from "../mutate/addCard";
 
 const Reveal = dynamic(() => import("../components/Reveal"));
-const CardList = dynamic(() => import("../components/CardList"));
 
-export default function Cards() {
+export default function Webs() {
   const router = useRouter();
 
   const { data: session } = useSession({
@@ -67,28 +67,23 @@ export default function Cards() {
         imageUrl = res.data.secure_url;
       });
       try {
-        // let response = await fetch("/api/cards", {
-        //   method: "POST",
-        //   body: JSON.stringify({
-        //     name,
-        //     imageUrl,
-        //     alt,
-        //     des,
-        //     level,
-        //   }),
-        // });
-        const data = {
-          name,
-          image: imageUrl,
-          alt,
-          des,
-          level,
-        };
-        await addCard(data);
-        // response = await response.json();
+        let response = await fetch("/api/cards", {
+          method: "POST",
+          body: JSON.stringify({
+            name,
+            imageUrl,
+            alt,
+            des,
+            level,
+          }),
+        });
+
+        addCard();
+
+        response = await response.json();
         setError("");
-        setStatus("Add Card Success");
         getCards().then((cards) => setCards(JSON.parse(cards)));
+        setStatus("Add Card Success");
         setName("");
         setImage("");
         imageRef.current.value = "";
@@ -112,8 +107,8 @@ export default function Cards() {
       });
 
       response = await response.json();
-      setStatus("Delete Card Success");
       getCards().then((cards) => setCards(JSON.parse(cards)));
+      setStatus("Delete Card Success");
     } catch (error) {
       console.error(error);
       setError(error);

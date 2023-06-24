@@ -1,6 +1,7 @@
 "use client";
-import Head from "next/head";
+import localFont from "next/font/local";
 import dynamic from "next/dynamic";
+import Head from "next/head";
 
 import "./globals.scss";
 import { useState, useEffect, useRef } from "react";
@@ -12,6 +13,11 @@ import { usePathname } from "next/navigation";
 
 const Nav = dynamic(() => import("./components/Nav"), { ssr: false });
 const Modal = dynamic(() => import("./components/Modal"), { ssr: false });
+
+const monoFont = localFont({
+  src: "../../public/fonts/Font.ttf",
+  display: "swap",
+});
 
 export default function RootLayout({ children, session }) {
   const pathname = usePathname();
@@ -34,7 +40,7 @@ export default function RootLayout({ children, session }) {
 
   return (
     <html lang="en">
-      <body className="overflow-x-hidden">
+      <body className={`overflow-x-hidden bg-black ${monoFont.className}`}>
         <SessionProvider session={session}>
           <AnimatePresence mode="wait" initial={false}>
             <motion.main

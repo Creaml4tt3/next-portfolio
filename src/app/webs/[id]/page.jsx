@@ -1,37 +1,30 @@
 "use client";
 import Image from "next/image";
-import dynamic from "next/dynamic";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
+import Reveal from "@/app/components/Reveal";
 import axios from "axios";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { getCards } from "../mutate/getCards";
-import { addCard } from "../mutate/addCard";
 
-const Reveal = dynamic(() => import("../components/Reveal"));
-const CardList = dynamic(() => import("../components/CardList"));
-
-export default function Cards() {
-  const router = useRouter();
-
-  const { data: session } = useSession({
-    required: true,
-    onUnauthenticated() {
-      router.push("/auth/signin");
-    },
-  });
-
+export default function Page({ params }) {
   const [name, setName] = useState("");
   const [image, setImage] = useState("");
   const [tempImage, setTempImage] = useState("");
   const [alt, setAlt] = useState("");
   const [des, setDes] = useState("");
-  const [level, setLevel] = useState(3);
+  const [level, setLevel] = useState(0);
   const [error, setError] = useState("");
   const [status, setStatus] = useState("");
-  const [cards, setCards] = useState([""]);
 
-  const imageRef = useRef(null);
+  const [card, setCard] = useState(false);
+
+  async function getCard() {
+    try {
+      let response = await fetch(`/api/cards/${params.id}`);
+      return await response.json();
+    } catch (error) {
+      console.error(error);
+      setError(error);
+    }
+  }
 
   async function uploadFile() {
     const data = new FormData();
@@ -51,88 +44,58 @@ export default function Cards() {
   }
 
   useEffect(() => {
-    getCards().then((cards) => setCards(JSON.parse(cards)));
+    getCard().then((res) => setCard(res));
   }, []);
   useEffect(() => {
+    if (card) {
+      setName(card.name ? card.name : "");
+      setImage(card.image ? card.image : "");
+      setAlt(card.alt ? card.alt : "");
+      setDes(card.des ? card.des : "");
+      setLevel(card.level ? card.level : 3);
+    }
+  }, [card]);
+  useEffect(() => {
+    if (image.length > 0) {
+      setTempImage(image);
+    }
     if (typeof image === "object") {
       const imageUrl = URL.createObjectURL(image);
       setTempImage(imageUrl);
     }
   }, [image]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (name && image && des) {
-      let imageUrl;
-      await uploadFile().then((res) => {
-        imageUrl = res.data.secure_url;
-      });
-      try {
-        // let response = await fetch("/api/cards", {
-        //   method: "POST",
-        //   body: JSON.stringify({
-        //     name,
-        //     imageUrl,
-        //     alt,
-        //     des,
-        //     level,
-        //   }),
-        // });
-        const data = {
+    let imageUrl;
+    await uploadFile().then((res) => {
+      console.log(res);
+      imageUrl = res.data.secure_url;
+    });
+    try {
+      let response = await fetch(`/api/cards/${params.id}`, {
+        method: "PATCH",
+        body: JSON.stringify({
           name,
-          image: imageUrl,
+          imageUrl,
           alt,
           des,
           level,
-        };
-        await addCard(data);
-        // response = await response.json();
-        setError("");
-        setStatus("Add Card Success");
-        getCards().then((cards) => setCards(JSON.parse(cards)));
-        setName("");
-        setImage("");
-        imageRef.current.value = "";
-        setTempImage("");
-        setAlt("");
-        setDes("");
-        setLevel(3);
-      } catch (error) {
-        console.error(error);
-        setError(error);
-      }
-    } else {
-      return setError("Name, Image and Description fields are requied!");
-    }
-  };
-
-  const handleDelete = async (id) => {
-    try {
-      let response = await fetch(`/api/cards/${id}`, {
-        method: "DELETE",
+        }),
+        headers: {
+          Accept: "application/json, text/plain, */*",
+          "Content-Type": "application/json",
+        },
       });
-
       response = await response.json();
-      setStatus("Delete Card Success");
-      getCards().then((cards) => setCards(JSON.parse(cards)));
+      setStatus("Edit Card Success");
     } catch (error) {
       console.error(error);
       setError(error);
     }
   };
-
   return (
-    <main className="MainWrapper flex-center h-screen w-screen overflow-x-hidden">
-      <Reveal>
-        <ul className="CardsLists flex max-w-lg flex-col justify-start gap-4">
-          {cards &&
-            cards.length > 0 &&
-            cards.map((card, index) => {
-              return (
-                <CardList key={index} card={card} handleDelete={handleDelete} />
-              );
-            })}
-        </ul>
-      </Reveal>
+    <div>
       <Reveal>
         <form
           className="FormCardsCreate w-96 rounded-lg bg-grey_08 p-4"
@@ -160,28 +123,27 @@ export default function Cards() {
               id="name"
               name="name"
               placeholder="name..."
-              value={name}
+              value={name ? name : ""}
               onChange={(e) => setName(e.target.value)}
               className="Input w-full rounded-md px-3 py-2 text-base text-grey"
             />
           </div>
           <div className="FormWraper">
-            {tempImage && (
-              <Image src={tempImage} alt={alt} width={120} height={120} />
-            )}
             <label
               htmlFor="image"
               className="InputLabel text-base font-medium text-white"
             >
               Image
             </label>
+            {tempImage && (
+              <Image src={tempImage} alt={alt} width={120} height={120} />
+            )}
             <input
-              ref={imageRef}
               type="file"
               id="image"
               name="image"
               onChange={(e) => setImage(e.target.files[0])}
-              className="Input y w-full rounded-md px-3 py-2 text-base text-white"
+              className="Input w-full rounded-md px-3 py-2 text-base text-white"
             />
           </div>
           <div className="FormWraper">
@@ -196,7 +158,7 @@ export default function Cards() {
               id="alt"
               name="alt"
               placeholder="alt..."
-              value={alt}
+              value={alt ? alt : ""}
               onChange={(e) => setAlt(e.target.value)}
               className="Input w-full rounded-md px-3 py-2 text-base text-grey"
             />
@@ -213,7 +175,7 @@ export default function Cards() {
               id="level"
               name="level"
               placeholder="level..."
-              value={level}
+              value={level ? level : ""}
               onChange={(e) => setLevel(Number(e.target.value))}
               className="Input w-full rounded-md px-3 py-2 text-base text-grey"
             />
@@ -231,7 +193,7 @@ export default function Cards() {
               name="des"
               rows={4}
               placeholder="description..."
-              value={des}
+              value={des ? des : ""}
               onChange={(e) => setDes(e.target.value)}
               className="Input w-full rounded-md px-3 py-2 text-base text-grey"
             />
@@ -240,10 +202,10 @@ export default function Cards() {
             type="submit"
             className="SubmitButton rounded-lg bg-blue px-3 py-2"
           >
-            <span className="SubmitButtonText text-white">Add Card</span>
+            <span className="SubmitButtonText text-white">Edit Card</span>
           </button>
         </form>
       </Reveal>
-    </main>
+    </div>
   );
 }

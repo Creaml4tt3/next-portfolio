@@ -2,9 +2,15 @@
 module.exports = {
   content: ["./src/app/**/*.{js,ts,jsx,tsx,mdx}"],
   theme: {
+    screens: {
+      laptop: { max: "1440px" },
+      tablet: { max: "1023px" },
+      mobile: { max: "767px" },
+    },
     extend: {
       colors: {
         bg: "#e9e9e9",
+        softGrey: "#262626",
         grey: "#1b1c1c",
         grey_08: "rgba(27,28,28,0.8)",
         white: "#ffffff",
@@ -16,6 +22,12 @@ module.exports = {
       fontFamily: {
         mono: ["Font", "sans-serif"],
         noto_sans_thai: ["Noto Sans Thai", "sans-serif"],
+      },
+      padding: {
+        desktop: "60px",
+        laptop: "40px",
+        tablet: "30px",
+        mobile: "20px",
       },
     },
   },

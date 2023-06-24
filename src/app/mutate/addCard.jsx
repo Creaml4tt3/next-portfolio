@@ -5,11 +5,13 @@ export async function addCard(request) {
   const client = await clientPromise;
   const db = client.db("cards");
   const { name, image, alt, des, level } = await request;
-  const card = await db.collection("cards").insertOne({
-    name: name,
-    image: image,
-    alt: alt,
-    des: des,
-    level: level,
+  return await db.collection("cards").insertOne({
+    name,
+    image,
+    alt,
+    des,
+    level,
+    created_at: Date.now(),
+    updated_at: Date.now(),
   });
 }
