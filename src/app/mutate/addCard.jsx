@@ -11,7 +11,7 @@ export async function addCard(request) {
     alt,
     des,
     level,
-    created_at: Date.now(),
-    updated_at: Date.now(),
+    created_at: new Date().toUTCString(),
+    updated_at: new Date().toUTCString(),
   });
 }

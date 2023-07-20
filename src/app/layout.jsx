@@ -1,7 +1,6 @@
 "use client";
 import localFont from "next/font/local";
 import dynamic from "next/dynamic";
-import Head from "next/head";
 
 import "./globals.scss";
 import { useState, useEffect, useRef } from "react";
@@ -11,18 +10,30 @@ import { SessionProvider } from "next-auth/react";
 
 import { usePathname } from "next/navigation";
 
-const Nav = dynamic(() => import("./components/Nav"), { ssr: false });
-const Modal = dynamic(() => import("./components/Modal"), { ssr: false });
+const Nav = dynamic(() => import("./components/Nav"));
+const Modal = dynamic(() => import("./components/Modal"));
 
 const monoFont = localFont({
   src: "../../public/fonts/Font.ttf",
   display: "swap",
+  preload: true,
 });
+
+export const metadata = {
+  title: "Creaml4tt3",
+  description: "Creaml4tt3 Personal Portfolio",
+  openGraph: {
+    title: "Creaml4tt3",
+    description: "Creaml4tt3 Personal Portfolio",
+  },
+};
 
 export default function RootLayout({ children, session }) {
   const pathname = usePathname();
   const [navActive, setNavActive] = useState(pathname ? pathname : "/");
-  const [modalActive, setModalActive] = useState(true);
+  const [modalActive, setModalActive] = useState(
+    process.env.WIP ? process.env.WIP : false
+  );
 
   const handleModal = (active) => {
     setModalActive(active);
@@ -40,7 +51,7 @@ export default function RootLayout({ children, session }) {
 
   return (
     <html lang="en">
-      <body className={`overflow-x-hidden bg-black ${monoFont.className}`}>
+      <body className={`overflow-x-hidden bg-bg ${monoFont.className}`}>
         <SessionProvider session={session}>
           <AnimatePresence mode="wait" initial={false}>
             <motion.main

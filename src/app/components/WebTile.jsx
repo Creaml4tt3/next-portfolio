@@ -14,7 +14,7 @@ export default function WebTile({ children, ...props }) {
           left: 0,
         }}
         whileHover={{ cursor: "grab" }}
-        className="WebTile aspect-square w-full rounded-[40px] bg-blue"
+        className="WebTile aspect-square w-full rounded-[40px] border-2 border-black bg-white"
         {...props}
       >
         {children}

@@ -19,4 +19,220 @@
     transform-style: preserve-3d;
     transform-origin: center;
   }
+  .transition-button {
+    transition: box-shadow 0.2s ease-out, transform 0.15s ease-in;
+  }
+  .text-stroke {
+    -webkit-text-stroke: 2px black;
+    text-shadow: 0px 6px black;
+  }
+  .halftone {
+    --dotSize: 0.25rem;
+    --bgSize: 1.5rem;
+    --bgPosition: calc(var(--bgSize) / 2);
+
+    background-image: radial-gradient(
+        circle at center,
+        rgba(1, 1, 1, 0.05) var(--dotSize),
+        transparent 0
+      ),
+      radial-gradient(
+        circle at center,
+        rgba(0, 0, 0, 0.025) var(--dotSize),
+        transparent 0
+      );
+    background-size: var(--bgSize) var(--bgSize);
+    background-position: 0 0, var(--bgPosition) var(--bgPosition);
+  }
+  .weave {
+    background: linear-gradient(
+        45deg,
+        #dca 12%,
+        transparent 0,
+        transparent 88%,
+        #dca 0
+      ),
+      linear-gradient(
+        135deg,
+        transparent 37%,
+        #a85 0,
+        rgb(173, 170, 166) 63%,
+        transparent 0
+      ),
+      linear-gradient(45deg, transparent 37%, #dca 0, #dca 63%, transparent 0)
+        #753;
+    background-size: 50px 50px;
+  }
+  .wave {
+    background-color: black;
+    background-image: radial-gradient(
+        circle at 100% 150%,
+        black 24%,
+        white 24%,
+        white 28%,
+        black 28%,
+        black 36%,
+        white 36%,
+        white 40%,
+        transparent 40%,
+        transparent
+      ),
+      radial-gradient(
+        circle at 0 150%,
+        black 24%,
+        white 24%,
+        white 28%,
+        black 28%,
+        black 36%,
+        white 36%,
+        white 40%,
+        transparent 40%,
+        transparent
+      ),
+      radial-gradient(
+        circle at 50% 100%,
+        white 10%,
+        black 10%,
+        black 23%,
+        white 23%,
+        white 30%,
+        black 30%,
+        black 43%,
+        white 43%,
+        white 50%,
+        black 50%,
+        black 63%,
+        white 63%,
+        white 71%,
+        transparent 71%,
+        transparent
+      ),
+      radial-gradient(
+        circle at 100% 50%,
+        white 5%,
+        black 5%,
+        black 15%,
+        white 15%,
+        white 20%,
+        black 20%,
+        black 29%,
+        white 29%,
+        white 34%,
+        black 34%,
+        black 44%,
+        white 44%,
+        white 49%,
+        transparent 49%,
+        transparent
+      ),
+      radial-gradient(
+        circle at 0 50%,
+        white 5%,
+        black 5%,
+        black 15%,
+        white 15%,
+        white 20%,
+        black 20%,
+        black 29%,
+        white 29%,
+        white 34%,
+        black 34%,
+        black 44%,
+        white 44%,
+        white 49%,
+        transparent 49%,
+        transparent
+      );
+    background-size: 100px 50px;
+  }
+
+  .cross-dotted {
+    background: radial-gradient(black 3px, transparent 4px),
+      radial-gradient(black 3px, transparent 4px),
+      linear-gradient(#fff 4px, transparent 0),
+      linear-gradient(
+        45deg,
+        transparent 74px,
+        transparent 75px,
+        #a4a4a4 75px,
+        #a4a4a4 76px,
+        transparent 77px,
+        transparent 109px
+      ),
+      linear-gradient(
+        -45deg,
+        transparent 75px,
+        transparent 76px,
+        #a4a4a4 76px,
+        #a4a4a4 77px,
+        transparent 78px,
+        transparent 109px
+      ),
+      #fff;
+    background-size: 109px 109px, 109px 109px, 100% 6px, 109px 109px,
+      109px 109px;
+    background-position: 54px 55px, 0px 0px, 0px 0px, 0px 0px, 0px 0px;
+  }
+  .horizontal-line {
+    background-color: rgba(0, 0, 0, 0.5);
+    background-size: 25px 25px;
+    background-image: repeating-linear-gradient(
+      0deg,
+      rgb(233, 233, 233),
+      rgb(233, 233, 233) 1px,
+      rgba(0, 0, 0, 0.8) 1px,
+      rgba(0, 0, 0, 0.8)
+    );
+  }
+  .grid-pattern {
+    background-color: #e9e9e9;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.05) 3px, transparent 3px),
+      linear-gradient(to right, rgba(0, 0, 0, 0.05) 3px, #e9e9e9 3px);
+    background-size: 80px 80px;
+  }
+  .grid-pattern-small {
+    background-color: #e9e9e9;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5) 2px, transparent 2px),
+      linear-gradient(to right, rgba(0, 0, 0, 0.5) 2px, #e9e9e9 2px);
+    background-size: 20px 20px;
+  }
+  .lds-facebook {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+  }
+  .lds-facebook div {
+    display: inline-block;
+    position: absolute;
+    left: 8px;
+    width: 16px;
+    background: #fff;
+    border: 2px solid black;
+    box-shadow: 0 4px 0 black;
+    animation: lds-facebook 2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+  }
+  .lds-facebook div:nth-child(1) {
+    left: 8px;
+    animation-delay: -0.24s;
+  }
+  .lds-facebook div:nth-child(2) {
+    left: 32px;
+    animation-delay: -0.12s;
+  }
+  .lds-facebook div:nth-child(3) {
+    left: 56px;
+    animation-delay: 0;
+  }
+  @keyframes lds-facebook {
+    0% {
+      top: 8px;
+      height: 64px;
+    }
+    50%,
+    100% {
+      top: 24px;
+      height: 32px;
+    }
+  }
 }

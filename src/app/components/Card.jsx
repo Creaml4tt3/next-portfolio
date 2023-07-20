@@ -47,11 +47,11 @@ export default function Card({
       perspective={640}
       transitionSpeed={1000}
       className={
-        "Card flex-center group relative m-0 h-fit w-fit flex-col rounded-2xl bg-white px-4 py-4 shadow-2xl backdrop-blur backdrop-brightness-125 " +
+        "Card flex-center group relative m-0 h-fit w-fit flex-col rounded-2xl border-2 border-black bg-white px-4 py-4 backdrop-blur backdrop-brightness-125" +
         className
       }
     >
-      <div className="CardImage flex-center relative h-96 w-64 overflow-hidden rounded-xl border border-solid border-blue bg-grey backdrop-blur">
+      <div className="CardImage flex-center relative h-96 w-64 overflow-hidden rounded-xl border-2 border-black bg-black backdrop-blur">
         {image ? (
           <Image
             src={image}

@@ -10,11 +10,11 @@ export default function Reveal({
   className = "",
 }) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true });
+  const isInView = useInView(ref, { once: true, amount: 0.5 });
   const mainControl = useAnimation();
 
   useEffect(() => {
-    if (isInView) {
+    if (isInView === true) {
       mainControl.start("visible");
     }
   }, [isInView]);

@@ -1,11 +1,10 @@
-import { lexendPeta } from "./Fonts";
-export default function Title({ children, className }) {
+export default function Title({ children, className, font }) {
   return (
     <div
       className={
         "Title text-center text-[64px] uppercase text-white " + className
       }
-      style={lexendPeta.style}
+      style={font?.style}
     >
       {children}
     </div>

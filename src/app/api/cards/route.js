@@ -40,8 +40,8 @@ export async function POST(request) {
         alt: alt,
         des: des,
         level: level,
-        created_at: Date.now(),
-        updated_at: Date.now(),
+        created_at: new Date().toUTCString(),
+        updated_at: new Date().toUTCString(),
       });
       return NextResponse.json(card);
     } catch (e) {

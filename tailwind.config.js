@@ -29,6 +29,16 @@ module.exports = {
         tablet: "30px",
         mobile: "20px",
       },
+      boxShadow: {
+        solid: "0 8px 0px black",
+        medium_solid: "0 4px 0px black",
+        small_solid: "0 2px 0px black",
+      },
+      translate: {
+        solid: "8px",
+        medium_solid: "4px",
+        small_solid: "2px",
+      },
     },
   },
   plugins: [require("tailwind-scrollbar")],

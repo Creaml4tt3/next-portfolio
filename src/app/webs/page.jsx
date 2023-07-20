@@ -1,16 +1,18 @@
 "use client";
 import Image from "next/image";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
+import CreatableSelect from "react-select/creatable";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { getCards } from "../mutate/getCards";
 
-import { addCard } from "../mutate/addCard";
+import { readWebs, createWeb, deleteWeb } from "../mutate/Webs";
+
+import { stackOptions } from "./stackOptions";
 
 const Reveal = dynamic(() => import("../components/Reveal"));
-const CardList = dynamic(() => import("../components/CardList"));
 
 export default function Webs() {
   const router = useRouter();
@@ -27,12 +29,14 @@ export default function Webs() {
   const [tempImage, setTempImage] = useState("");
   const [alt, setAlt] = useState("");
   const [des, setDes] = useState("");
-  const [level, setLevel] = useState(3);
+  const [stack, setStack] = useState([]);
+  const [link, setLink] = useState("");
   const [error, setError] = useState("");
   const [status, setStatus] = useState("");
-  const [cards, setCards] = useState([""]);
+  const [webs, setWebs] = useState([]);
 
   const imageRef = useRef(null);
+  const selectRef = useRef(null);
 
   async function uploadFile() {
     const data = new FormData();
@@ -51,8 +55,24 @@ export default function Webs() {
     }
   }
 
+  function updateWebs() {
+    readWebs().then((webs) => setWebs(JSON.parse(webs)));
+  }
+
+  function clearInputs() {
+    setName("");
+    setImage("");
+    setTempImage("");
+    setAlt("");
+    setDes("");
+    setStack("");
+    setLink("");
+    selectRef.current.clearValue();
+    imageRef.current.value = "";
+  }
+
   useEffect(() => {
-    getCards().then((cards) => setCards(JSON.parse(cards)));
+    updateWebs();
   }, []);
   useEffect(() => {
     if (typeof image === "object") {
@@ -60,6 +80,7 @@ export default function Webs() {
       setTempImage(imageUrl);
     }
   }, [image]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (name && image && des) {
@@ -68,178 +89,208 @@ export default function Webs() {
         imageUrl = res.data.secure_url;
       });
       try {
-        let response = await fetch("/api/cards", {
-          method: "POST",
-          body: JSON.stringify({
-            name,
-            imageUrl,
-            alt,
-            des,
-            level,
-          }),
+        await createWeb({
+          name,
+          image: imageUrl,
+          alt,
+          des,
+          stack,
+          link,
         });
-
-        addCard();
-
-        response = await response.json();
+        updateWebs();
+        setStatus("Add Web Success");
         setError("");
-        getCards().then((cards) => setCards(JSON.parse(cards)));
-        setStatus("Add Card Success");
-        setName("");
-        setImage("");
-        imageRef.current.value = "";
-        setTempImage("");
-        setAlt("");
-        setDes("");
-        setLevel(3);
+        clearInputs();
       } catch (error) {
         console.error(error);
         setError(error);
       }
     } else {
-      return setError("Name, Image and Description fields are requied!");
+      return setError("All fields are requied!");
     }
   };
 
   const handleDelete = async (id) => {
     try {
-      let response = await fetch(`/api/cards/${id}`, {
-        method: "DELETE",
-      });
-
-      response = await response.json();
-      getCards().then((cards) => setCards(JSON.parse(cards)));
-      setStatus("Delete Card Success");
+      await deleteWeb({ id });
+      updateWebs();
+      setStatus("Delete Web Success");
     } catch (error) {
       console.error(error);
       setError(error);
     }
   };
 
-  return (
-    <main className="MainWrapper flex-center h-screen w-screen overflow-x-hidden">
-      <Reveal>
-        <ul className="CardsLists flex max-w-lg flex-col justify-start gap-4">
-          {cards &&
-            cards.length > 0 &&
-            cards.map((card, index) => {
-              return (
-                <CardList key={index} card={card} handleDelete={handleDelete} />
-              );
-            })}
-        </ul>
-      </Reveal>
-      <Reveal>
-        <form
-          className="FormCardsCreate w-96 rounded-lg bg-grey_08 p-4"
-          onSubmit={handleSubmit}
-        >
-          {error && (
-            <div className="Error">
-              <span className="ErrorText text-base text-red-500">{error}</span>
-            </div>
-          )}
-          {status && (
-            <div className="Status">
-              <span className="StatusText text-base text-blue">{status}</span>
-            </div>
-          )}
-          <div className="FormWraper">
-            <label
-              htmlFor="name"
-              className="InputLabel text-base font-medium text-white"
-            >
-              Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              placeholder="name..."
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="Input w-full rounded-md px-3 py-2 text-base text-grey"
-            />
+  if (session) {
+    return (
+      <main className="MainWrapper flex-center h-screen w-screen overflow-x-hidden">
+        <Reveal>
+          <div className="CardsLists flex max-w-lg flex-col justify-start gap-4">
+            {webs &&
+              webs.map((web) => {
+                return (
+                  <Link href={`/webs/${web._id}`} key={web._id}>
+                    <div className="text-white">
+                      <span>{web.name}</span>
+                      <Image
+                        src={web.image}
+                        alt={web.alt}
+                        width={120}
+                        height={120}
+                      />
+                      <span>{web.link}</span>
+                      <span>{web.des}</span>
+                      <div className="flex-center gap-2">
+                        {web.stack.length > 1
+                          ? web.stack.map((st) => {
+                              return <span key={st}>{st}</span>;
+                            })
+                          : web.stack[0]}
+                      </div>
+                      <button onClick={() => handleDelete(web._id)}>
+                        Delete
+                      </button>
+                    </div>
+                  </Link>
+                );
+              })}
           </div>
-          <div className="FormWraper">
-            {tempImage && (
-              <Image src={tempImage} alt={alt} width={120} height={120} />
-            )}
-            <label
-              htmlFor="image"
-              className="InputLabel text-base font-medium text-white"
-            >
-              Image
-            </label>
-            <input
-              ref={imageRef}
-              type="file"
-              id="image"
-              name="image"
-              onChange={(e) => setImage(e.target.files[0])}
-              className="Input y w-full rounded-md px-3 py-2 text-base text-white"
-            />
-          </div>
-          <div className="FormWraper">
-            <label
-              htmlFor="alt"
-              className="InputLabel text-base font-medium text-white"
-            >
-              Alt
-            </label>
-            <input
-              type="text"
-              id="alt"
-              name="alt"
-              placeholder="alt..."
-              value={alt}
-              onChange={(e) => setAlt(e.target.value)}
-              className="Input w-full rounded-md px-3 py-2 text-base text-grey"
-            />
-          </div>
-          <div className="FormWraper">
-            <label
-              htmlFor="level"
-              className="InputLabel text-base font-medium text-white"
-            >
-              Level
-            </label>
-            <input
-              type="number"
-              id="level"
-              name="level"
-              placeholder="level..."
-              value={level}
-              onChange={(e) => setLevel(Number(e.target.value))}
-              className="Input w-full rounded-md px-3 py-2 text-base text-grey"
-            />
-          </div>
-          <div className="FormWraper">
-            <label
-              htmlFor="des"
-              className="InputLabel text-base font-medium text-white"
-            >
-              Description
-            </label>
-            <textarea
-              type="text"
-              id="des"
-              name="des"
-              rows={4}
-              placeholder="description..."
-              value={des}
-              onChange={(e) => setDes(e.target.value)}
-              className="Input w-full rounded-md px-3 py-2 text-base text-grey"
-            />
-          </div>
-          <button
-            type="submit"
-            className="SubmitButton rounded-lg bg-blue px-3 py-2"
+        </Reveal>
+        <Reveal>
+          <form
+            className="FormCardsCreate w-96 rounded-lg bg-grey_08 p-4"
+            onSubmit={handleSubmit}
           >
-            <span className="SubmitButtonText text-white">Add Card</span>
-          </button>
-        </form>
-      </Reveal>
-    </main>
-  );
+            {error && (
+              <div className="Error">
+                <span className="ErrorText text-base text-red-500">
+                  {error}
+                </span>
+              </div>
+            )}
+            {status && (
+              <div className="Status">
+                <span className="StatusText text-base text-blue">{status}</span>
+              </div>
+            )}
+            <div className="FormWraper">
+              <label
+                htmlFor="name"
+                className="InputLabel text-base font-medium text-white"
+              >
+                Name
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="name..."
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="Input w-full rounded-md px-3 py-2 text-base text-grey"
+              />
+            </div>
+            <div className="FormWraper">
+              {tempImage && (
+                <Image src={tempImage} alt={alt} width={120} height={120} />
+              )}
+              <label
+                htmlFor="image"
+                className="InputLabel text-base font-medium text-white"
+              >
+                Image
+              </label>
+              <input
+                ref={imageRef}
+                type="file"
+                id="image"
+                name="image"
+                onChange={(e) => setImage(e.target.files[0])}
+                className="Input y w-full rounded-md px-3 py-2 text-base text-white"
+              />
+            </div>
+            <div className="FormWraper">
+              <label
+                htmlFor="alt"
+                className="InputLabel text-base font-medium text-white"
+              >
+                Alt
+              </label>
+              <input
+                type="text"
+                id="alt"
+                name="alt"
+                placeholder="alt..."
+                value={alt}
+                onChange={(e) => setAlt(e.target.value)}
+                className="Input w-full rounded-md px-3 py-2 text-base text-grey"
+              />
+            </div>
+            <div className="FormWraper">
+              <label
+                htmlFor="stack"
+                className="InputLabel text-base font-medium text-white"
+              >
+                Stack
+              </label>
+              <CreatableSelect
+                ref={selectRef}
+                id="stack"
+                name="stack"
+                isMulti
+                options={stackOptions}
+                placeholder-="stack..."
+                onChange={(e) =>
+                  setStack(Array.from(e).map((option) => option.value))
+                }
+              />
+            </div>
+            <div className="FormWraper">
+              <label
+                htmlFor="link"
+                className="InputLabel text-base font-medium text-white"
+              >
+                Link
+              </label>
+              <input
+                type="text"
+                id="link"
+                name="link"
+                placeholder="link..."
+                value={link}
+                onChange={(e) => {
+                  setLink(e.target.value);
+                }}
+                className="Input w-full rounded-md px-3 py-2 text-base text-grey"
+              />
+            </div>
+            <div className="FormWraper">
+              <label
+                htmlFor="des"
+                className="InputLabel text-base font-medium text-white"
+              >
+                Description
+              </label>
+              <textarea
+                type="text"
+                id="des"
+                name="des"
+                rows={4}
+                placeholder="description..."
+                value={des}
+                onChange={(e) => setDes(e.target.value)}
+                className="Input w-full rounded-md px-3 py-2 text-base text-grey"
+              />
+            </div>
+            <button
+              type="submit"
+              className="SubmitButton rounded-lg bg-blue px-3 py-2"
+            >
+              <span className="SubmitButtonText text-white">Add Web</span>
+            </button>
+          </form>
+        </Reveal>
+      </main>
+    );
+  }
 }
