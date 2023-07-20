@@ -1,29 +1,35 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { motion, useAnimation } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 
-export default function Modal({ children, handleModal }) {
-  const [isOpen, setIsOpen] = useState(true);
+export default function Modal({ children }) {
+  const [modalActive, setModalActive] = useState(false);
   const [count, setCount] = useState(5);
   const mainControl = useAnimation();
+  const countIntervalRef = useRef(null);
   const countDown = () => {
-    setCount(count - 1);
+    setCount((prevCount) => {
+      if (prevCount <= 0) {
+        clearInterval(countIntervalRef.current);
+        mainControl.start({ scale: 0, opacity: 0 });
+        setTimeout(() => {
+          setModalActive(false);
+        }, 350);
+        return prevCount;
+      }
+      return prevCount - 1;
+    });
   };
-  useEffect(() => {
-    if (count === 0) {
-      clearInterval(countInterval);
-      mainControl.start({ scale: 0, opacity: 0 });
-      setTimeout(() => {
-        setIsOpen(false);
-        handleModal(false);
-      }, 350);
-    }
-  }, [count]);
-  const countInterval = setInterval(countDown, 1000);
 
-  if (isOpen) {
+  useEffect(() => {
+    setModalActive(process.env.NEXT_PUBLIC_WIP === "true");
+    countIntervalRef.current = setInterval(countDown, 1000);
+    return () => clearInterval(countIntervalRef.current);
+  }, []);
+
+  if (modalActive) {
     return (
       <motion.div
         initial={false}
@@ -39,8 +45,7 @@ export default function Modal({ children, handleModal }) {
               clearInterval(countInterval);
               mainControl.start({ scale: 0, opacity: 0 });
               setTimeout(() => {
-                setIsOpen(false);
-                handleModal(false);
+                setModalActive(false);
               }, 350);
             }}
           >
@@ -61,4 +66,6 @@ export default function Modal({ children, handleModal }) {
       </motion.div>
     );
   }
+
+  return null;
 }
