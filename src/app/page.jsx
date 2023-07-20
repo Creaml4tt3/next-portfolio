@@ -24,7 +24,7 @@ const Card = dynamic(() => import("./components/Card"), {
   loading: () => <Loading />,
   ssr: false,
 });
-const Title = dynamic(() => import("./components/Title"));
+const Title = dynamic(() => import("./components/Title"), { ssr: true });
 const Blob = dynamic(() => import("./components/Blob"));
 const WebTile = dynamic(() => import("./components/WebTile"), {
   loading: () => <Loading />,

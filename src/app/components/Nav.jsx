@@ -5,7 +5,7 @@ import Lottie from "lottie-react";
 import eyeLottie from "@public/lotties/eye.json";
 import { useRouter } from "next/navigation";
 
-export default function Nav({ active, handleNav }) {
+export default function Nav({ active }) {
   const [navToggle, setNavToggle] = useState(false);
   const [navSize, setNavSize] = useState({});
   const navRef = useRef(null);
@@ -50,7 +50,6 @@ export default function Nav({ active, handleNav }) {
   };
 
   const handleRedirect = (url) => {
-    handleNav(url);
     router.replace(url);
   };
 
