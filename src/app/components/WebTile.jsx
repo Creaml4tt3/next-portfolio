@@ -1,9 +1,20 @@
 import Tilt from "react-parallax-tilt";
 import { motion } from "framer-motion";
 
-export default function WebTile({ children, ...props }) {
+export default function WebTile({
+  children,
+  className,
+  classContainer,
+  ...props
+}) {
   return (
-    <Tilt gyroscope tiltReverse perspective={640} transitionSpeed={1000}>
+    <Tilt
+      gyroscope
+      tiltReverse
+      perspective={640}
+      transitionSpeed={1000}
+      className={"overflow-hidden " + className}
+    >
       <motion.div
         drag
         dragTransition={{ bounceStiffness: 100, bounceDamping: 10 }}
@@ -14,7 +25,10 @@ export default function WebTile({ children, ...props }) {
           left: 0,
         }}
         whileHover={{ cursor: "grab" }}
-        className="WebTile aspect-square w-full rounded-[40px] border-2 border-black bg-white"
+        className={
+          "WebTile relative aspect-square w-full rounded-2xl bg-white " +
+          classContainer
+        }
         {...props}
       >
         {children}

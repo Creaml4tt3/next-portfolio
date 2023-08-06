@@ -121,7 +121,7 @@ export default function Cards() {
   };
 
   return (
-    <main className="MainWrapper flex-center h-screen w-screen overflow-x-hidden">
+    <main className="MainWrapper flex-center h-fit min-h-screen w-screen overflow-y-auto overflow-x-hidden">
       <Reveal>
         <ul className="CardsLists flex max-w-lg flex-col justify-start gap-4">
           {cards &&

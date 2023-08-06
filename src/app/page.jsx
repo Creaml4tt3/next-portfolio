@@ -14,6 +14,7 @@ import Lottie from "lottie-react";
 import witchHouse from "../../public/lotties/witch_house.json";
 
 import { getCards } from "./mutate/getCards";
+import { readWebs } from "./mutate/Webs";
 import Loading from "./components/Loading";
 
 const Reveal = dynamic(() => import("./components/Reveal"), {});
@@ -36,82 +37,85 @@ export default function Home() {
   const containerRef = useRef(null);
   const cardContainerRef = useRef(null);
   const witchHouseRef = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-  });
+  const { scrollYProgress } = useScroll();
   const [hookedYPostion, setHookedYPosition] = useState(0);
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     setHookedYPosition(latest);
   });
-  const movingX = useTransform(scrollYProgress, [0, 1], ["0%", "150%"]);
+  const movingX = useTransform(scrollYProgress, [0, 1], ["0vw", "100vw"]);
   const _movingX = useTransform(scrollYProgress, [0, 1], ["0%", "-150%"]);
   const movingY = useTransform(scrollYProgress, [0, 1], ["0%", "125vh"]);
   const _movingY = useTransform(scrollYProgress, [0, 1], ["0%", "-100vh"]);
+  const circleUp = useTransform(scrollYProgress, [0, 0.55], ["0%", "200%"]);
+  const scaleUp = useTransform(scrollYProgress, [0, 1], [1, 3]);
 
   const [cards, setCards] = useState([]);
+  const [webs, setWebs] = useState([]);
   useEffect(() => {
     getCards().then((cards) => setCards(JSON.parse(cards)));
+    readWebs().then((webs) => setWebs(JSON.parse(webs)));
   }, []);
   useEffect(() => {
     if (witchHouseRef.current) {
       witchHouseRef.current.pause();
     }
   }, [witchHouseRef]);
+
   useEffect(() => {
     if (witchHouseRef.current) {
       const windowHeight = window.innerHeight;
       const witchDuration = witchHouseRef.current.getDuration(true);
       const sumValue =
-        (hookedYPostion * windowHeight * 1.5) /
+        (hookedYPostion * windowHeight * 1.25) /
           ((windowHeight * 1.25) / witchDuration) +
-        19;
+        19.2;
 
       witchHouseRef.current.goToAndStop(sumValue, true);
     }
   }, [hookedYPostion, witchHouseRef]);
 
-  const cardInView = useInView(cardContainerRef, { amount: 0.3 });
+  const cardInView = useInView(cardContainerRef, { amount: 0.25 });
 
-  const webTiles = [
-    {
-      id: 1,
-    },
-    {
-      id: 2,
-    },
-    {
-      id: 3,
-    },
-    {
-      id: 4,
-    },
-    {
-      id: 5,
-    },
-    {
-      id: 6,
-    },
-    {
-      id: 7,
-    },
-    {
-      id: 8,
-    },
-  ];
+  // const webTiles = [
+  //   {
+  //     id: 1,
+  //   },
+  //   {
+  //     id: 2,
+  //   },
+  //   {
+  //     id: 3,
+  //   },
+  //   {
+  //     id: 4,
+  //   },
+  //   {
+  //     id: 5,
+  //   },
+  //   {
+  //     id: 6,
+  //   },
+  //   {
+  //     id: 7,
+  //   },
+  //   {
+  //     id: 8,
+  //   },
+  // ];
 
   return (
-    <div className="PageWrapper grid-pattern h-full min-h-screen overflow-x-hidden overflow-y-visible scroll-smooth">
-      <section className="HeroSection flex h-screen w-screen items-center">
+    <div className="PageWrapper h-full min-h-screen overflow-x-hidden overflow-y-visible scroll-smooth">
+      <section className="HeroSection relative block h-fit min-h-screen w-screen">
         <motion.div
           style={{ y: movingY }}
           className="HeroSectionContent relative mx-auto h-2/5 w-4/5"
         >
-          <Image
+          {/* <Image
             src={"/images/drawing-blue.svg"}
             alt="drawing"
             fill={true}
             className="HeroSectionContentImage !inset-[unset] !bottom-[15%]"
-          />
+          /> */}
           {/* <Image
             src={"/images/cat-website.png"}
             blurDataURL={"/images/cat-website.png"}
@@ -130,9 +134,10 @@ export default function Home() {
             className="HeroSectionContentImage"
           /> */}
         </motion.div>
-        {/* <motion.div
+
+        <motion.div
           style={{ y: movingY }}
-          className="WitchHouseContainer absolute h-full w-full"
+          className="WitchHouseContainer pointer-events-none absolute z-0 h-full w-full opacity-30 mix-blend-multiply grayscale"
         >
           <Lottie
             lottieRef={witchHouseRef}
@@ -141,19 +146,41 @@ export default function Home() {
             loop={false}
             className="WitchHouse pointer-events-none absolute bottom-0 left-0 right-0 mx-auto"
           />
-        </motion.div> */}
+        </motion.div>
+        {/* <Reveal> */}
+        {/* <Rive className="float-right h-[100dvh] w-[100dvw]" /> */}
+        {/* </Reveal> */}
+        <motion.div
+          style={{ x: movingX }}
+          className={
+            "TitleEng absolute bottom-[35dvh] left-[5dvw] text-3xl font-light text-white"
+          }
+        >
+          Unleashing creativity with <br />
+          <span className="text-blue">Creaml4tt3</span> web development.
+        </motion.div>
         <Reveal>
           <Title
             font={mobo}
-            className="flex-center text-stroke absolute bottom-[15dvh] left-1/2 z-50 w-4/5 -translate-x-1/2 flex-col leading-none"
+            className="flex-center text-stroke absolute bottom-[15dvh] left-[5dvw] z-50 w-4/5 flex-col leading-none"
           >
-            <motion.div style={{ x: _movingX }} className="MovingTitle">
-              {/* Unleashing creativity with */}
+            <motion.div
+              style={{ x: movingX }}
+              className="MovingTitle w-full text-start"
+            >
               創造性を解き放つ クリームラテ
             </motion.div>
-            <motion.div style={{ x: movingX }} className="MovingTitle">
-              {/* Creaml4tt3 web development. */}
-              クリームラッテのウェブ開発。
+            <motion.div
+              style={{ x: movingX }}
+              className="MovingTitle flex w-full items-end text-start"
+            >
+              <motion.div
+                // style={{ scale: scaleUp }}
+                className="text-[min(18vw,96px)] text-blue"
+              >
+                クリームラッテ
+              </motion.div>
+              <span>のウェブ開発。</span>
             </motion.div>
           </Title>
         </Reveal>
@@ -168,9 +195,51 @@ export default function Home() {
       <section className="PageContain min-h-[25dvh]" />
       <motion.section className="WebShowCase p-24" style={{ y: _movingY }}>
         <div className="WebTileContainer grid grid-cols-4 gap-5">
-          {webTiles &&
-            webTiles.map((webTile) => {
-              return <WebTile key={webTile.id}></WebTile>;
+          {webs &&
+            webs.map((webTile, index) => {
+              return (
+                <a key={webTile.id} href={webTile?.link}>
+                  <WebTile
+                    // style={{
+                    //   clipPath: `circle(${circleUp.current} at 0% ${
+                    //     (index % 5) * 25
+                    //   }%)`,
+                    // }}
+                    className="group rounded-2xl border-4 border-jp_black"
+                    classContainer="flex justify-start items-start flex-col p-6 transtion-all !bg-transparent"
+                  >
+                    <Image
+                      src={webTile?.image}
+                      blurDataURL={webTile?.image}
+                      placeholder="blur"
+                      alt={webTile?.alt}
+                      sizes="(max-width: 1920px) 25vw"
+                      fill={true}
+                      className="Image absolute -z-10 object-cover transition-all duration-300 group-hover:blur-sm group-hover:grayscale"
+                    />
+                    <div className="WebTileDetail pointer-events-none flex flex-col items-start justify-start gap-2 opacity-0 transition-all duration-300 group-hover:opacity-100">
+                      <span className="WebTileTitle rounded-lg bg-blue p-2 text-lg font-medium text-white">
+                        {webTile?.name}
+                      </span>
+                      <p className="WebTileDes rounded-lg bg-white p-2 text-xs font-light text-black">
+                        {webTile?.des}
+                      </p>
+                      <ul className="WebTileStacks absolute bottom-6 left-6 flex flex-wrap-reverse gap-2">
+                        {webTile?.stack.map((sta) => {
+                          return (
+                            <li
+                              key={sta}
+                              className="WebTileStack rounded-lg bg-jp_black p-2 text-white"
+                            >
+                              {sta}
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </div>
+                  </WebTile>
+                </a>
+              );
             })}
         </div>
       </motion.section>
@@ -218,9 +287,6 @@ export default function Home() {
             );
           })}
       </motion.section>
-      {/* <Reveal>
-        <Rive />
-      </Reveal> */}
     </div>
   );
 }

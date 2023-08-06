@@ -30,7 +30,7 @@ export default function Loading() {
         style={{ width: "auto" }}
         className="CatLoading"
       /> */}
-      <div class="lds-facebook">
+      <div className="lds-facebook">
         <div></div>
         <div></div>
         <div></div>

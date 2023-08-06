@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Lottie from "lottie-react";
 import eyeLottie from "@public/lotties/eye.json";
 import { useRouter } from "next/navigation";
+import { lexendPeta, mobo } from "./Fonts";
 
 export default function Nav({ active }) {
   const [navToggle, setNavToggle] = useState(false);
@@ -87,7 +88,7 @@ export default function Nav({ active }) {
         delay: 0.1,
       }}
       // style={{ translateX: "-50%" }}
-      className={`NavBar group fixed left-0 right-0 top-[5dvh] z-[100] mx-auto flex w-fit items-center justify-between gap-2 overflow-hidden rounded-xl border-2 border-black bg-bg px-1 pb-2 pt-1 shadow-medium_solid ${
+      className={`NavBar group fixed left-[5dvw] right-0 top-[5dvh] z-[100] mr-auto flex w-fit items-center justify-between gap-2 overflow-hidden rounded-xl border-2 border-black px-2 pb-3 pt-2 shadow-medium_solid ${
         navToggle
           ? "transition-button hover:translate-y-medium_solid hover:shadow-none"
           : ""
@@ -96,13 +97,15 @@ export default function Nav({ active }) {
       <div className="Nav flex">
         <button
           onClick={() => handleRedirect("/")}
-          className={`NavButton transition-button group rounded-md border-2 border-solid border-black bg-blue px-3 py-3 shadow-medium_solid hover:translate-y-medium_solid hover:shadow-none ${
-            active === "/" ? "translate-y-medium_solid shadow-none" : ""
+          className={`NavButton transition-button group rounded-md border-2 border-solid border-black px-3 py-3 shadow-medium_solid hover:translate-y-medium_solid hover:shadow-none ${
+            active === "/"
+              ? "translate-y-medium_solid bg-jp_black shadow-none"
+              : "bg-blue"
           }`}
         >
           <span
-            className={`NavText text-base font-bold text-grey transition-all duration-300 group-hover:text-white ${
-              active === "/" ? "text-white" : ""
+            className={`NavText text-base font-bold uppercase text-white transition-all duration-300 group-hover:text-white ${
+              active === "/" ? "" : ""
             }`}
           >
             creaml4tt3
@@ -122,7 +125,7 @@ export default function Nav({ active }) {
                     : ""
                 }`}
               >
-                <span className="NavText text-base font-bold text-black">
+                <span className="NavText text-base font-bold uppercase text-black">
                   {menu.name}
                 </span>
               </button>

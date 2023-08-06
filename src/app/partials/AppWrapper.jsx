@@ -31,7 +31,7 @@ export default function AppWrapper({ children, session }) {
             stiffness: 100,
             duration: 0.5,
           }}
-          className="MainWrapper overflow-x-hidden overflow-y-visible"
+          className="MainWrapper grid-pattern z-10 overflow-x-hidden overflow-y-visible !scroll-smooth"
         >
           <Modal>
             <div className="ModalContent flex-center h-full">

@@ -2,12 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@100;200;300;400;500;600;700;800;900&display=swap");
+// @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 @layer base {
   * {
     box-sizing: border-box;
-    @apply scroll-smooth scrollbar-thin scrollbar-track-grey scrollbar-thumb-blue;
+    @apply cursor-none scrollbar-thin scrollbar-track-jp_light_grey scrollbar-thumb-blue #{!important};
   }
   body {
     @apply bg-bg;

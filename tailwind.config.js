@@ -15,9 +15,13 @@ module.exports = {
         grey_08: "rgba(27,28,28,0.8)",
         white: "#ffffff",
         blue: "#5299f0",
+        // blue: "#00637C",
         blue_08: "rgba(82,153,240,0.8)",
         pink: "#E97090",
         redder: "#AE395E",
+        jp_black: "#050505",
+        jp_light_grey: "#9B9B9B",
+        jp_dark_grey: "#646464",
       },
       fontFamily: {
         mono: ["Font", "sans-serif"],

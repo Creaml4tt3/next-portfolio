@@ -123,14 +123,14 @@ export default function Webs() {
 
   if (session) {
     return (
-      <main className="MainWrapper flex-center h-screen w-screen overflow-x-hidden">
+      <main className="MainWrapper flex-center min-h-screen w-screen overflow-y-auto overflow-x-hidden">
         <Reveal>
           <div className="CardsLists flex max-w-lg flex-col justify-start gap-4">
             {webs &&
               webs.map((web) => {
                 return (
                   <Link href={`/webs/${web._id}`} key={web._id}>
-                    <div className="text-white">
+                    <div className="text-black">
                       <span>{web.name}</span>
                       <Image
                         src={web.image}
@@ -139,7 +139,7 @@ export default function Webs() {
                         height={120}
                       />
                       <span>{web.link}</span>
-                      <span>{web.des}</span>
+                      <span className="line-clamp-2">{web.des}</span>
                       <div className="flex-center gap-2">
                         {web.stack.length > 1
                           ? web.stack.map((st) => {

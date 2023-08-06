@@ -1,7 +1,7 @@
 "use client";
 import { useRive, useStateMachineInput } from "@rive-app/react-canvas";
 
-export default function Rive() {
+export default function Rive(props) {
   const STATE_MACHINE_NAME = "State Machine 1";
   const INPUT_NAME = "Pressed";
   const CLICK_NAME = "Clicked";
@@ -29,7 +29,8 @@ export default function Rive() {
 
   return (
     <RiveComponent
-      style={{ height: "100vh", width: "100vw" }}
+      className={props.className}
+      style={{ height: "100%", width: "100%" }}
       onClick={() => onClickInput.fire()}
     />
   );

@@ -62,7 +62,6 @@ export default function Page({ params }) {
       setDes(web?.des ? web.des : "");
       setStack(web?.stack ? web.stack : []);
       setLink(web?.link ? web.link : "");
-      console.log(web);
     }
   }, [web]);
   useEffect(() => {
@@ -78,9 +77,13 @@ export default function Page({ params }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     let imageUrl;
-    await uploadFile().then((res) => {
-      imageUrl = res.data.secure_url;
-    });
+    if (typeof image !== "string") {
+      await uploadFile().then((res) => {
+        imageUrl = res.data.secure_url;
+      });
+    } else {
+      imageUrl = image;
+    }
     try {
       updateWeb({
         id: params.id,
