@@ -150,15 +150,18 @@ export default function Home() {
         {/* <Reveal> */}
         {/* <Rive className="float-right h-[100dvh] w-[100dvw]" /> */}
         {/* </Reveal> */}
-        <motion.div
-          style={{ x: movingX }}
-          className={
-            "TitleEng absolute bottom-[35dvh] left-[5dvw] text-3xl font-light text-white"
-          }
-        >
-          Unleashing creativity with <br />
-          <span className="text-blue">Creaml4tt3</span> web development.
-        </motion.div>
+        <Reveal>
+          <motion.div
+            style={{ x: movingX }}
+            className={
+              "TitleEng absolute bottom-[35dvh] left-[5dvw] text-3xl font-light text-white"
+            }
+          >
+            Unleashing creativity with <br />
+            <span className="text-blue">Creaml4tt3</span> web development.
+          </motion.div>
+        </Reveal>
+
         <Reveal>
           <Title
             font={mobo}
@@ -184,6 +187,7 @@ export default function Home() {
             </motion.div>
           </Title>
         </Reveal>
+
         {/* <Canvas
           camera={{ position: [0.0, 0.0, 8.0] }}
           className="Canvas"
@@ -198,47 +202,49 @@ export default function Home() {
           {webs &&
             webs.map((webTile, index) => {
               return (
-                <a key={webTile.id} href={webTile?.link}>
-                  <WebTile
-                    // style={{
-                    //   clipPath: `circle(${circleUp.current} at 0% ${
-                    //     (index % 5) * 25
-                    //   }%)`,
-                    // }}
-                    className="group rounded-2xl border-4 border-jp_black"
-                    classContainer="flex justify-start items-start flex-col p-6 transtion-all !bg-transparent"
-                  >
-                    <Image
-                      src={webTile?.image}
-                      blurDataURL={webTile?.image}
-                      placeholder="blur"
-                      alt={webTile?.alt}
-                      sizes="(max-width: 1920px) 25vw"
-                      fill={true}
-                      className="Image absolute -z-10 object-cover transition-all duration-300 group-hover:blur-sm group-hover:grayscale"
-                    />
-                    <div className="WebTileDetail pointer-events-none flex flex-col items-start justify-start gap-2 opacity-0 transition-all duration-300 group-hover:opacity-100">
-                      <span className="WebTileTitle rounded-lg bg-blue p-2 text-lg font-medium text-white">
-                        {webTile?.name}
-                      </span>
-                      <p className="WebTileDes rounded-lg bg-white p-2 text-xs font-light text-black">
-                        {webTile?.des}
-                      </p>
-                      <ul className="WebTileStacks absolute bottom-6 left-6 flex flex-wrap-reverse gap-2">
-                        {webTile?.stack.map((sta) => {
-                          return (
-                            <li
-                              key={sta}
-                              className="WebTileStack rounded-lg bg-jp_black p-2 text-white"
-                            >
-                              {sta}
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    </div>
-                  </WebTile>
-                </a>
+                <Reveal key={webTile.id}>
+                  <a href={webTile?.link}>
+                    <WebTile
+                      // style={{
+                      //   clipPath: `circle(${circleUp.current} at 0% ${
+                      //     (index % 5) * 25
+                      //   }%)`,
+                      // }}
+                      className="group rounded-2xl border-4 border-jp_black"
+                      classContainer="flex justify-start items-start flex-col p-6 transtion-all !bg-transparent"
+                    >
+                      <Image
+                        src={webTile?.image}
+                        blurDataURL={webTile?.image}
+                        placeholder="blur"
+                        alt={webTile?.alt}
+                        sizes="(max-width: 1920px) 25vw"
+                        fill={true}
+                        className="Image absolute -z-10 object-cover transition-all duration-300 group-hover:blur-sm group-hover:grayscale"
+                      />
+                      <div className="WebTileDetail pointer-events-none flex flex-col items-start justify-start gap-2 opacity-0 transition-all duration-300 group-hover:opacity-100">
+                        <span className="WebTileTitle rounded-lg bg-blue p-2 text-lg font-medium text-white">
+                          {webTile?.name}
+                        </span>
+                        <p className="WebTileDes rounded-lg bg-white p-2 text-xs font-light text-black">
+                          {webTile?.des}
+                        </p>
+                        <ul className="WebTileStacks absolute bottom-6 left-6 flex flex-wrap-reverse gap-2">
+                          {webTile?.stack.map((sta) => {
+                            return (
+                              <li
+                                key={sta}
+                                className="WebTileStack rounded-lg bg-jp_black p-2 text-white"
+                              >
+                                {sta}
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </div>
+                    </WebTile>
+                  </a>
+                </Reveal>
               );
             })}
         </div>
@@ -251,39 +257,40 @@ export default function Home() {
           cards.length > 0 &&
           cards.map((card, index) => {
             return (
-              <motion.div
-                key={card.id}
-                drag
-                dragTransition={{ bounceStiffness: 100, bounceDamping: 10 }}
-                dragConstraints={{
-                  top: 0,
-                  right: 0,
-                  bottom: 0,
-                  left: 0,
-                }}
-                whileHover={{ cursor: "grab" }}
-                initial={{ y: 0 }}
-                animate={{
-                  y: -Math.abs(cardInView ? 0 : 30 * index),
-                  rotateZ: Math.abs(cardInView ? 0 : -15),
-                }}
-                transition={{
-                  type: "spring",
-                  stiffness: 30 * (index + 1),
-                  duration: 0.25 * index,
-                }}
-              >
-                <Card
-                  key={card?._id}
-                  id={card?._id}
-                  image={card?.image}
-                  alt={card?.alt}
-                  name={card?.name}
-                  des={card?.des}
-                  level={card?.level}
-                  count={card?.count}
-                />
-              </motion.div>
+              <Reveal key={card.id}>
+                <motion.div
+                  drag
+                  dragTransition={{ bounceStiffness: 100, bounceDamping: 10 }}
+                  dragConstraints={{
+                    top: 0,
+                    right: 0,
+                    bottom: 0,
+                    left: 0,
+                  }}
+                  whileHover={{ cursor: "grab" }}
+                  initial={{ y: 0 }}
+                  animate={{
+                    y: -Math.abs(cardInView ? 0 : 30 * index),
+                    rotateZ: Math.abs(cardInView ? 0 : -15),
+                  }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 30 * (index + 1),
+                    duration: 0.25 * index,
+                  }}
+                >
+                  <Card
+                    key={card?._id}
+                    id={card?._id}
+                    image={card?.image}
+                    alt={card?.alt}
+                    name={card?.name}
+                    des={card?.des}
+                    level={card?.level}
+                    count={card?.count}
+                  />
+                </motion.div>
+              </Reveal>
             );
           })}
       </motion.section>

@@ -13,7 +13,7 @@ export default function Modal({ children }) {
     setCount((prevCount) => {
       if (prevCount <= 0) {
         clearInterval(countIntervalRef.current);
-        mainControl.start({ scale: 0, opacity: 0 });
+        mainControl.start({ opacity: 0 });
         setTimeout(() => {
           setModalActive(false);
         }, 350);
@@ -34,15 +34,15 @@ export default function Modal({ children }) {
       <motion.div
         initial={false}
         animate={mainControl}
-        transition={{ duration: 0.3 }}
-        className="Modal flex-center fixed left-0 top-0 z-50 h-screen w-screen bg-transparent backdrop-blur-xl"
+        transition={{ duration: 0.5 }}
+        className="Modal flex-center fixed left-0 top-0 z-[9998] h-screen w-screen bg-transparent backdrop-blur-xl"
       >
         <div className="ModalOverlay pointer-events-none absolute left-0 top-0 h-full w-full bg-bg opacity-30 blur-3xl" />
         <div className="ModalContentWrapper relative h-60 w-96 rounded-xl bg-grey_08 p-4">
           <button
             className="ModalCloseButton absolute right-6 top-6 text-white"
             onClick={() => {
-              clearInterval(countInterval);
+              clearInterval(countIntervalRef.current);
               mainControl.start({ scale: 0, opacity: 0 });
               setTimeout(() => {
                 setModalActive(false);

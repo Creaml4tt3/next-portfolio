@@ -102,7 +102,7 @@ export default function Cursor({ active }) {
       {active && (
         <canvas
           ref={canvasRef}
-          className="custom-cursor-canvas pointer-events-none fixed left-0 top-0 z-[9998]"
+          className="custom-cursor-canvas pointer-events-none fixed left-0 top-0 z-[9999]"
           width={windowSize?.width}
           height={windowSize?.height}
         />

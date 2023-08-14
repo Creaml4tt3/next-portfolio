@@ -20,7 +20,7 @@ export default function AppWrapper({ children, session }) {
   };
   return (
     <SessionProvider session={session}>
-      <AnimatePresence mode="wait" initial={false}>
+      <AnimatePresence mode="wait">
         <motion.main
           key={pathname}
           variants={variants}
